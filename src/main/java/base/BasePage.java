@@ -3,13 +3,12 @@ package base;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.LogStatus;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -18,17 +17,23 @@ import reporting.ExtentManager;
 import reporting.ExtentTestManager;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Properties;
+import java.util.Set;
 
 public class BasePage {
 
-    public static final String URL = "http://amazon.com";
     public static WebDriver driver;
     public static WebDriverWait webDriverWait;
     public static ExtentReports extent;
+    private final File propertiesFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\config\\secret.properties");
+    public static Properties properties;
 
     @BeforeSuite(alwaysRun = true)
     public static void reportSetup(ITestContext context) {
@@ -45,11 +50,12 @@ public class BasePage {
         ExtentTestManager.getTest().assignCategory(className);
     }
 
-    @Parameters("browser")
+    @Parameters({"browser", "url"})
     @BeforeMethod
-    public void driverSetup(@Optional("chrome") String browser) {
+    public void driverSetup(@Optional("chrome") String browser, @Optional("http://phptravels.com/demo/") String url) throws IOException {
+        properties = loadProperties(propertiesFile);
         driverInit(browser);
-        driver.get(URL);
+        driver.get(url);
         driver.manage().deleteAllCookies();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.manage().window().maximize();
@@ -85,7 +91,50 @@ public class BasePage {
         extent.flush();
     }
 
+    // region Selenium API
+    public void clickOnElement(WebElement element) {
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(element));
+        element.click();
+    }
+
+    public void sendKeysToElement(WebElement element, String keys) {
+        webDriverWait.until(ExpectedConditions.visibilityOf(element));
+        element.sendKeys(keys);
+    }
+
+    public boolean isElementVisible(WebElement element) {
+        try {
+            webDriverWait.until(ExpectedConditions.visibilityOf(element));
+        } catch (ElementNotVisibleException elementNotVisibleException) {
+
+        }
+
+        return element.isDisplayed();
+    }
+
+    public void switchTabs() {
+        String parentHandle = driver.getWindowHandle();
+
+        Set<String> windowHandles = driver.getWindowHandles();
+
+        for (String handle : windowHandles) {
+            if (!handle.equals(parentHandle)) {
+                driver.switchTo().window(handle);
+            }
+        }
+    }
+
+    // endregion
+
     // region Helper Methods
+    private static Properties loadProperties(File file) throws IOException {
+        Properties prop = new Properties();
+        InputStream ism = new FileInputStream(file);
+        prop.load(ism);
+        ism.close();
+        return prop;
+    }
+
     public void driverInit(String browser) {
         if (browser.equalsIgnoreCase("chrome")) {
             WebDriverManager.chromedriver().setup();
@@ -120,7 +169,6 @@ public class BasePage {
         calendar.setTimeInMillis(millis);
         return calendar.getTime();
     }
-
     // endregion
 
 }
