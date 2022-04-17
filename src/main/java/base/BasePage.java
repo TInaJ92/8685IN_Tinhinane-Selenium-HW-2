@@ -9,6 +9,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -36,13 +37,13 @@ public class BasePage {
     public static Properties properties;
 
     @BeforeSuite(alwaysRun = true)
-    public static void reportSetup(ITestContext context) {
+    public void reportSetup(ITestContext context) {
         ExtentManager.setOutputDirectory(context);
         extent = ExtentManager.getInstance();
     }
 
     @BeforeMethod(alwaysRun = true)
-    public static void reportInit(Method method) {
+    public void reportInit(Method method) {
         String className = method.getDeclaringClass().getSimpleName();
         String methodName = method.getName();
 
@@ -52,7 +53,7 @@ public class BasePage {
 
     @Parameters({"browser", "url"})
     @BeforeMethod
-    public void driverSetup(@Optional("chrome") String browser, @Optional("http://phptravels.com/demo/") String url) throws IOException {
+    public void driverSetup(@Optional("chrome") String browser, @Optional("http://the-internet.herokuapp.com/") String url) throws IOException {
         properties = loadProperties(propertiesFile);
         driverInit(browser);
         driver.get(url);
@@ -100,6 +101,21 @@ public class BasePage {
     public void sendKeysToElement(WebElement element, String keys) {
         webDriverWait.until(ExpectedConditions.visibilityOf(element));
         element.sendKeys(keys);
+    }
+
+    public void selectFromDropdownByVisibleText(WebElement element, String visibleText) {
+        Select select = new Select(element);
+        select.selectByVisibleText(visibleText);
+    }
+
+    public void selectFromDropdownByIndex(WebElement element, int index) {
+        Select select = new Select(element);
+        select.selectByIndex(index);
+    }
+
+    public void selectFromDropdownByValue(WebElement element, String value) {
+        Select select = new Select(element);
+        select.selectByValue(value);
     }
 
     public boolean isElementVisible(WebElement element) {

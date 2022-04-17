@@ -4,7 +4,7 @@
 <suite name="Build Acceptance" verbose="1" >
 
 <parameter name="browser" value="chrome"/>
-<parameter name="url" value="http://phptravels.com/demo/"/>
+<parameter name="url" value="http://the-internet.herokuapp.com/"/>
 
     <test name="System">
         <classes>
