@@ -2,6 +2,7 @@ package base;
 
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.LogStatus;
+import config.Config;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,27 +15,24 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
+import org.testng.annotations.Optional;
 import reporting.ExtentManager;
 import reporting.ExtentTestManager;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.time.Duration;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
+
+// TODO - Implement System Bar shared functionality
 public class BasePage {
 
+    public static Map<Object, String> appConfig = Config.appConfig();
+    public static Map<Object, String> databaseConfig = Config.databaseConfig();
     public static WebDriver driver;
     public static WebDriverWait webDriverWait;
     public static ExtentReports extent;
-    private final File propertiesFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\config\\secret.properties");
-    public static Properties properties;
 
     @BeforeSuite(alwaysRun = true)
     public void reportSetup(ITestContext context) {
@@ -51,12 +49,11 @@ public class BasePage {
         ExtentTestManager.getTest().assignCategory(className);
     }
 
-    @Parameters({"browser", "url"})
+    @Parameters({"browser"})
     @BeforeMethod
-    public void driverSetup(@Optional("chrome") String browser, @Optional("http://the-internet.herokuapp.com/") String url) throws IOException {
-        properties = loadProperties(propertiesFile);
+    public void driverSetup(@Optional("chrome") String browser) {
         driverInit(browser);
-        driver.get(url);
+        driver.get(appConfig.get(Config.AppProperties.URL));
         driver.manage().deleteAllCookies();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.manage().window().maximize();
@@ -93,6 +90,19 @@ public class BasePage {
     }
 
     // region Selenium API
+    public String getElementText(WebElement element) {
+        String text = "";
+        webDriverWait.until(ExpectedConditions.visibilityOf(element));
+
+        text = element.getText();
+
+        if (text.equals("")) {
+            text = element.getAttribute("innerHTML");
+        }
+
+        return text;
+    }
+
     public void clickOnElement(WebElement element) {
         webDriverWait.until(ExpectedConditions.elementToBeClickable(element));
         element.click();
@@ -122,13 +132,17 @@ public class BasePage {
         try {
             webDriverWait.until(ExpectedConditions.visibilityOf(element));
         } catch (ElementNotVisibleException elementNotVisibleException) {
+            try {
+                // TODO - Implement JSExecutor sync
+            } catch (Exception e) {
 
+            }
         }
 
         return element.isDisplayed();
     }
 
-    public void switchTabs() {
+    public void switchToTab() {
         String parentHandle = driver.getWindowHandle();
 
         Set<String> windowHandles = driver.getWindowHandles();
@@ -143,15 +157,7 @@ public class BasePage {
     // endregion
 
     // region Helper Methods
-    private static Properties loadProperties(File file) throws IOException {
-        Properties prop = new Properties();
-        InputStream ism = new FileInputStream(file);
-        prop.load(ism);
-        ism.close();
-        return prop;
-    }
-
-    public void driverInit(String browser) {
+    private static void driverInit(String browser) {
         if (browser.equalsIgnoreCase("chrome")) {
             WebDriverManager.chromedriver().setup();
             driver = new ChromeDriver();
@@ -180,7 +186,7 @@ public class BasePage {
         }
     }
 
-    private Date getTime(long millis) {
+    private static Date getTime(long millis) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(millis);
         return calendar.getTime();

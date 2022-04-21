@@ -4,12 +4,10 @@
 <suite name="Build Acceptance" verbose="1" >
 
 <parameter name="browser" value="chrome"/>
-<parameter name="url" value="http://the-internet.herokuapp.com/"/>
 
-    <test name="System">
+    <test name="Integration">
         <classes>
 <!--            <class name=""/>-->
-<!--            <class name="test_amazon.TestShoppingCartPage"/>-->
         </classes>
     </test>
 </suite>
