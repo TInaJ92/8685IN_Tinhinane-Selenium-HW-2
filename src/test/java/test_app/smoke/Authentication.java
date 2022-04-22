@@ -1,9 +1,8 @@
 package test_app.smoke;
 
-import app.Homepage;
-import app.LoginPage;
+import app.pages.Homepage;
+import app.pages.Login;
 import config.Config;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import test_base.TestBasePage;
@@ -16,7 +15,7 @@ public class Authentication extends TestBasePage {
         String username = appConfig.get(Config.AppProperties.USER);
         String password = appConfig.get(Config.AppProperties.PASSWORD);
 
-        homepage.clickSignInButton().login(username, password);
+        homepage.clickLoginButton().login(username, password);
     }
 
     @Test
@@ -25,7 +24,7 @@ public class Authentication extends TestBasePage {
         String username = appConfig.get(Config.AppProperties.USER);
         String password = appConfig.get(Config.AppProperties.PASSWORD) + "1";
 
-        LoginPage login = homepage.clickSignInButton();
+        Login login = homepage.clickLoginButton();
         login.login(username, password);
 
         String errorMessage = "Authentication failed.";

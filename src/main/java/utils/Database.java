@@ -23,17 +23,15 @@ public class Database {
         Map<Object, String> dbConfig = Config.databaseConfig();
 
         try {
-            Class.forName((String)(dbConfig.get(DBProperties.DRIVER_CLASS)));
+            Class.forName((dbConfig.get(DBProperties.DRIVER_CLASS)));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
         try {
-            connect = DriverManager.getConnection(dbConfig.get(DBProperties.HOST).toString(),
-                    dbConfig.get(DBProperties.USER).toString(), dbConfig.get(DBProperties.PASSWORD).toString());
-
+            connect = DriverManager.getConnection(dbConfig.get(DBProperties.HOST),
+                    dbConfig.get(DBProperties.USER), dbConfig.get(DBProperties.PASSWORD));
             System.out.println("CONNECTED TO DATABASE!");
-
         } catch (SQLException sql) {
             System.out.println("\nUNABLE TO ESTABLISH CONNECTION TO DATABASE:\n" + sql.getMessage() + "\n");
         }

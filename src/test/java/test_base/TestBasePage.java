@@ -5,6 +5,6 @@ import utils.Database;
 
 public class TestBasePage extends BasePage {
 
-    public Database database = new Database();
+    public Database database;
 
 }

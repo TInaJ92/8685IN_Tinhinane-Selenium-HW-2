@@ -1,5 +1,6 @@
 package base;
 
+import com.beust.jcommander.Parameter;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.LogStatus;
 import config.Config;
@@ -33,7 +34,9 @@ public class BasePage {
     public static WebDriver driver;
     public static WebDriverWait webDriverWait;
     public static ExtentReports extent;
+    public static JavascriptExecutor jsDriver = (JavascriptExecutor) (driver);
 
+    // region Hooks
     @BeforeSuite(alwaysRun = true)
     public void reportSetup(ITestContext context) {
         ExtentManager.setOutputDirectory(context);
@@ -49,20 +52,25 @@ public class BasePage {
         ExtentTestManager.getTest().assignCategory(className);
     }
 
-    @Parameters({"browser"})
+    @Parameters({"enabled", "browser"})
     @BeforeMethod
-    public void driverSetup(@Optional("chrome") String browser) {
-        driverInit(browser);
-        driver.get(appConfig.get(Config.AppProperties.URL));
-        driver.manage().deleteAllCookies();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.manage().window().maximize();
+    public void driverSetup(@Optional("true") String enabled, @Optional("chrome") String browser) {
+        if (enabled.equalsIgnoreCase("true")) {
+            driverInit(browser);
+            driver.get(appConfig.get(Config.AppProperties.URL));
+            driver.manage().deleteAllCookies();
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            driver.manage().window().maximize();
+        }
     }
 
+    @Parameters({"enabled"})
     @AfterMethod
-    public void cleanUp() {
-        driver.close();
-        driver.quit();
+    public void cleanUp(@Optional("true") String enabled) {
+        if (enabled.equalsIgnoreCase("true")) {
+            driver.close();
+            driver.quit();
+        }
     }
 
     @AfterMethod(alwaysRun = true)
@@ -89,6 +97,8 @@ public class BasePage {
         extent.flush();
     }
 
+    // endregion
+
     // region Selenium API
     public String getElementText(WebElement element) {
         String text = "";
@@ -106,6 +116,21 @@ public class BasePage {
     public void clickOnElement(WebElement element) {
         webDriverWait.until(ExpectedConditions.elementToBeClickable(element));
         element.click();
+    }
+
+    public void safeClickOnElement(WebElement element) {
+        try {
+            clickOnElement(element);
+        } catch (ElementClickInterceptedException | StaleElementReferenceException e) {
+            System.out.println("Unable to click - trying again");
+            jsClickOnElement(element);
+        } catch (TimeoutException | ElementNotVisibleException e) {
+            System.out.println("Unable to locate element - check element locator");
+        }
+    }
+
+    public void jsClickOnElement(WebElement element) {
+        jsDriver.executeScript("arguments[0].click();", element);
     }
 
     public void sendKeysToElement(WebElement element, String keys) {
@@ -131,10 +156,10 @@ public class BasePage {
     public boolean isElementVisible(WebElement element) {
         try {
             webDriverWait.until(ExpectedConditions.visibilityOf(element));
-        } catch (ElementNotVisibleException elementNotVisibleException) {
+        } catch (ElementNotVisibleException | TimeoutException e) {
             try {
                 // TODO - Implement JSExecutor sync
-            } catch (Exception e) {
+            } catch (Exception ex) {
 
             }
         }

@@ -1,11 +1,11 @@
-package app;
+package app.pages;
 
-import base.BasePage;
+import app.shared.SystemBar;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class LoginPage extends BasePage {
+public class Login extends SystemBar {
 
     public static final String URL = "http://automationpractice.com/index.php?controller=authentication&back=my-account";
 
@@ -24,7 +24,7 @@ public class LoginPage extends BasePage {
     @FindBy(xpath = "//div[@id='center_column']//div[@class='alert alert-danger']//li")
     public WebElement errorMessageText;
 
-    public LoginPage() {
+    public Login() {
         PageFactory.initElements(driver, this);
     }
 

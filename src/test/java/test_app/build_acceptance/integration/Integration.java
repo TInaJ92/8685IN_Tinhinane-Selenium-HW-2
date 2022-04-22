@@ -4,6 +4,7 @@ import config.Config;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import test_base.TestBasePage;
+import utils.Database;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -32,6 +33,7 @@ public class Integration extends TestBasePage {
 
     @Test (groups = {"BAT"})
     public void testDatabaseConnectivity() throws SQLException {
+        database = new Database();
         String query = "SELECT 1 FROM DUAL";
         String response = database.executeQueryReadOne(query).toString();
         Assert.assertEquals(response, "1", "DATABASE NOT CONNECTED");
