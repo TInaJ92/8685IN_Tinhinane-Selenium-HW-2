@@ -3,17 +3,17 @@
 <suite name="BAT" verbose="1" >
 
     <parameter name="browser" value="chrome"/>
-    <parameter name="enabled" value="false"/>
 
     <test name="Integration">
+        <parameter name="enabled" value="false"/>
         <classes>
-            <class name="test_app.build_acceptance.integration.Integration"/>
+            <class name="test_app.build_acceptance.integration.Connectivity"/>
         </classes>
     </test>
 
     <test name="System">
         <classes>
-            <class name="test_app.build_acceptance.system.System"/>
+            <class name="test_app.build_acceptance.system.Authentication"/>
         </classes>
     </test>
 

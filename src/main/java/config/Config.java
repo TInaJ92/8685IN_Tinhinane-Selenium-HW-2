@@ -45,10 +45,10 @@ public class Config {
         Map<Object, String> dbConfig = new HashMap<>();
 
         if (properties != null) {
-            dbConfig.put(Database.DBProperties.DRIVER_CLASS, properties.getProperty("MYSQLJDBC.driver"));
-            dbConfig.put(Database.DBProperties.HOST, properties.getProperty("MYSQLJDBC.host"));
-            dbConfig.put(Database.DBProperties.USER, properties.getProperty("MYSQLJDBC.username"));
-            dbConfig.put(Database.DBProperties.PASSWORD, properties.getProperty("MYSQLJDBC.password"));
+            dbConfig.put(DBProperties.DRIVER_CLASS, properties.getProperty("MYSQLJDBC.driver"));
+            dbConfig.put(DBProperties.HOST, properties.getProperty("MYSQLJDBC.host"));
+            dbConfig.put(DBProperties.USER, properties.getProperty("MYSQLJDBC.username"));
+            dbConfig.put(DBProperties.PASSWORD, properties.getProperty("MYSQLJDBC.password"));
         }
 
         return dbConfig;
@@ -68,5 +68,8 @@ public class Config {
         URL, HOST, USER, PASSWORD
     }
 
+    public enum DBProperties {
+        DRIVER_CLASS, HOST, USER, PASSWORD
+    }
 
 }

@@ -8,17 +8,16 @@ import utils.Database;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.SQLException;
 
-public class Integration extends TestBasePage {
+public class Connectivity extends TestBasePage {
 
-    @Test (groups = {"BAT"})
-    public void testAppServerConnectivity() throws UnknownHostException {
-        InetAddress host = InetAddress.getByName(appConfig.get(Config.AppProperties.HOST));
+    @Test (groups = {"BAT"}, priority = 1)
+    public void testAppServerConnectivity() {
         boolean isConnected = false;
 
         try {
+            InetAddress host = InetAddress.getByName(appConfig.get(Config.AppProperties.HOST));
             if (host.isReachable(5000)) {
                 System.out.println("HOST RESPONSE: 200");
                 isConnected = true;
@@ -27,11 +26,10 @@ public class Integration extends TestBasePage {
             System.out.println("HOST IS NOT REACHABLE");
             e.printStackTrace();
         }
-
         Assert.assertTrue(isConnected);
     }
 
-    @Test (groups = {"BAT"})
+    @Test (groups = {"BAT"}, priority = 2)
     public void testDatabaseConnectivity() throws SQLException {
         database = new Database();
         String query = "SELECT 1 FROM DUAL";

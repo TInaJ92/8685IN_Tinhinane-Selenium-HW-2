@@ -1,6 +1,5 @@
 package base;
 
-import com.beust.jcommander.Parameter;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.LogStatus;
 import config.Config;
@@ -25,14 +24,13 @@ import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.*;
 
-
-// TODO - Implement System Bar shared functionality
 public class BasePage {
 
     public static Map<Object, String> appConfig = Config.appConfig();
     public static Map<Object, String> databaseConfig = Config.databaseConfig();
     public static WebDriver driver;
     public static WebDriverWait webDriverWait;
+    public static WebDriverWait syncWait;
     public static ExtentReports extent;
     public static JavascriptExecutor jsDriver = (JavascriptExecutor) (driver);
 
@@ -59,7 +57,6 @@ public class BasePage {
             driverInit(browser);
             driver.get(appConfig.get(Config.AppProperties.URL));
             driver.manage().deleteAllCookies();
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
             driver.manage().window().maximize();
         }
     }
@@ -118,6 +115,10 @@ public class BasePage {
         element.click();
     }
 
+    public void jsClickOnElement(WebElement element) {
+        jsDriver.executeScript("arguments[0].click();", element);
+    }
+
     public void safeClickOnElement(WebElement element) {
         try {
             clickOnElement(element);
@@ -127,10 +128,6 @@ public class BasePage {
         } catch (TimeoutException | ElementNotVisibleException e) {
             System.out.println("Unable to locate element - check element locator");
         }
-    }
-
-    public void jsClickOnElement(WebElement element) {
-        jsDriver.executeScript("arguments[0].click();", element);
     }
 
     public void sendKeysToElement(WebElement element, String keys) {
@@ -155,16 +152,11 @@ public class BasePage {
 
     public boolean isElementVisible(WebElement element) {
         try {
-            webDriverWait.until(ExpectedConditions.visibilityOf(element));
-        } catch (ElementNotVisibleException | TimeoutException e) {
-            try {
-                // TODO - Implement JSExecutor sync
-            } catch (Exception ex) {
-
-            }
+            syncWait.until(ExpectedConditions.visibilityOf(element));
+        } catch (TimeoutException e) {
+            return false;
         }
-
-        return element.isDisplayed();
+        return true;
     }
 
     public void switchToTab() {
@@ -195,19 +187,33 @@ public class BasePage {
         }
 
         webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        syncWait = new WebDriverWait(driver, Duration.ofSeconds(3));
     }
 
     private static void captureScreenshot(WebDriver driver, String testName) {
-        String fileName = testName + ".png";
+        String absPath = System.getProperty("user.dir");
+        String screenshotFileName = "screenshot_" + testName + ".png";
+        String fullScreenshotFileName = "full_screenshot_" + testName + ".png";
+
         File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        File newScreenshotFile = new File(System.getProperty("user.dir") + File.separator + "src" + File.separator +
-                "test" + File.separator + "reports" + File.separator + fileName);
+        File screenshotFile = new File(absPath + File.separator + "src" + File.separator + "test"
+                + File.separator + "reports" + File.separator + screenshotFileName);
+        File fullScreenshot = ((ChromeDriver) driver).getScreenshotAs(OutputType.FILE);
+        File fullScreenshotFile = new File(absPath + File.separator + "src" + File.separator + "test"
+                + File.separator + "reports" + File.separator + fullScreenshotFileName);
 
         try {
-            FileHandler.copy(screenshot, newScreenshotFile);
+            FileHandler.copy(screenshot, screenshotFile);
             System.out.println("SCREENSHOT TAKEN");
         } catch (Exception e) {
             System.out.println("ERROR TAKING SCREENSHOT: " + e.getMessage());
+        }
+
+        try {
+            FileHandler.copy(fullScreenshot, fullScreenshotFile);
+            System.out.println("FULL SCREENSHOT TAKEN");
+        } catch (Exception e) {
+            System.out.println("ERROR TAKING FULL SCREENSHOT: " + e.getMessage());
         }
     }
 

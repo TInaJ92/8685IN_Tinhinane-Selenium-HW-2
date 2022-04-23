@@ -1,4 +1,4 @@
-package app.pages;
+package app.pom;
 
 import app.shared.SystemBar;
 import org.openqa.selenium.WebElement;
@@ -11,6 +11,12 @@ public class Login extends SystemBar {
 
     @FindBy(id = "email")
     public WebElement emailAddressInputField;
+
+    @FindBy(xpath = "//div[@class='form-group form-error']")
+    public WebElement invalidEmailInputField;
+
+    @FindBy(xpath = "//div[@class='form-group form-ok']")
+    public WebElement validEmailInputField;
 
     @FindBy(id = "passwd")
     public WebElement passwordInputField;
@@ -40,9 +46,11 @@ public class Login extends SystemBar {
         clickOnElement(signInButton);
     }
 
-    public void login(String emailAddress, String password) {
+    public MyAccount login(String emailAddress, String password) {
         enterEmailAddress(emailAddress);
         enterPassword(password);
         clickSignInButton();
+
+        return new MyAccount();
     }
 }

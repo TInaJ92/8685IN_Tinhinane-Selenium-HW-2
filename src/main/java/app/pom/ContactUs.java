@@ -1,13 +1,11 @@
-package app.pages;
+package app.pom;
 
 import app.shared.SystemBar;
 import org.openqa.selenium.support.PageFactory;
 
-public class Homepage extends SystemBar {
+public class ContactUs extends SystemBar {
 
-    public Homepage() {
+    public ContactUs() {
         PageFactory.initElements(driver, this);
     }
-
-
 }

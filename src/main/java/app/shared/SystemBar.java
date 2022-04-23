@@ -1,8 +1,8 @@
 package app.shared;
 
-import app.pages.ContactUs;
-import app.pages.Homepage;
-import app.pages.Login;
+import app.pom.ContactUs;
+import app.pom.Homepage;
+import app.pom.Login;
 import base.BasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -21,6 +21,15 @@ public class SystemBar extends BasePage {
 
     @FindBy(xpath = "//a[@class='account']")
     public WebElement accountButton;
+
+    @FindBy(xpath = "//ul[@class='sf-menu clearfix menu-content sf-js-enabled sf-arrows']//a[@title='Women']")
+    public WebElement womenButton;
+
+    @FindBy(xpath = "//ul[@class='sf-menu clearfix menu-content sf-js-enabled sf-arrows']/li/a[@title='Dresses']")
+    public WebElement dressesButton;
+
+    @FindBy(xpath = "//ul[@class='sf-menu clearfix menu-content sf-js-enabled sf-arrows']/li/a[@title='T-shirts']")
+    public WebElement tShirtsButton;
 
     public SystemBar() {
         PageFactory.initElements(driver, this);

@@ -10,10 +10,6 @@ import java.util.Map;
 
 public class Database {
 
-    public enum DBProperties {
-        DRIVER_CLASS, HOST, USER, PASSWORD
-    }
-
     public static Connection connect = null;
     public static Statement statement = null;
     public static PreparedStatement ps = null;
@@ -23,14 +19,14 @@ public class Database {
         Map<Object, String> dbConfig = Config.databaseConfig();
 
         try {
-            Class.forName((dbConfig.get(DBProperties.DRIVER_CLASS)));
+            Class.forName((dbConfig.get(Config.DBProperties.DRIVER_CLASS)));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
         try {
-            connect = DriverManager.getConnection(dbConfig.get(DBProperties.HOST),
-                    dbConfig.get(DBProperties.USER), dbConfig.get(DBProperties.PASSWORD));
+            connect = DriverManager.getConnection(dbConfig.get(Config.DBProperties.HOST),
+                    dbConfig.get(Config.DBProperties.USER), dbConfig.get(Config.DBProperties.PASSWORD));
             System.out.println("CONNECTED TO DATABASE!");
         } catch (SQLException sql) {
             System.out.println("\nUNABLE TO ESTABLISH CONNECTION TO DATABASE:\n" + sql.getMessage() + "\n");
