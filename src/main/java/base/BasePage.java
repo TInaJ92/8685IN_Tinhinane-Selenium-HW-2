@@ -7,8 +7,10 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -18,6 +20,7 @@ import org.testng.annotations.*;
 import org.testng.annotations.Optional;
 import reporting.ExtentManager;
 import reporting.ExtentTestManager;
+import utils.Database;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -28,11 +31,12 @@ public class BasePage {
 
     public static Map<Object, String> appConfig = Config.appConfig();
     public static Map<Object, String> databaseConfig = Config.databaseConfig();
+    public static Database db = new Database();
     public static WebDriver driver;
     public static WebDriverWait webDriverWait;
     public static WebDriverWait syncWait;
     public static ExtentReports extent;
-    public static JavascriptExecutor jsDriver = (JavascriptExecutor) (driver);
+    public static JavascriptExecutor jsDriver;
 
     // region Hooks
     @BeforeSuite(alwaysRun = true)
@@ -97,6 +101,25 @@ public class BasePage {
     // endregion
 
     // region Selenium API
+    public void hoverOverElement(WebElement element) {
+        Actions actions = new Actions(driver);
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(element));
+        actions.moveToElement(element).perform();
+    }
+
+    public void dragDropElement(WebElement element) {
+
+    }
+
+    // TODO - Fix implementation
+    public WebElement setElementAttributeValueUsingXpath(String xPathLocator, String attribute, String value) {
+        jsDriver = (JavascriptExecutor) (driver);
+        jsDriver.executeScript("document.getElementByXpath('" + xPathLocator + "').setAttribute('" + attribute + "','"+ value + "');");
+
+        return driver.findElement(By.xpath(xPathLocator));
+    }
+
     public String getElementText(WebElement element) {
         String text = "";
         webDriverWait.until(ExpectedConditions.visibilityOf(element));
@@ -116,6 +139,7 @@ public class BasePage {
     }
 
     public void jsClickOnElement(WebElement element) {
+        jsDriver = (JavascriptExecutor) (driver);
         jsDriver.executeScript("arguments[0].click();", element);
     }
 
@@ -127,6 +151,7 @@ public class BasePage {
             jsClickOnElement(element);
         } catch (TimeoutException | ElementNotVisibleException e) {
             System.out.println("Unable to locate element - check element locator");
+            jsClickOnElement(element);
         }
     }
 

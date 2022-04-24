@@ -17,10 +17,11 @@ public class ExtentManager {
             File outputDirectory = new File(context.getOutputDirectory());
             File resultDirectory = new File(outputDirectory.getParentFile(),"html");
 
-            Date date = new Date();
+//            Date date = new Date();
 //            String fileName = "report_" + date.toString().replace(" ", "_").replace(":", "_")+".html";
             String fileName = "test_report.html";
-            extent = new ExtentReports(System.getProperty("user.dir")+"\\src\\test\\reports\\" + fileName,true);
+            extent = new ExtentReports(System.getProperty("user.dir") + File.separator + "src" + File.separator
+                    + "test" + File.separator + "reports" + File.separator + fileName,true);
             Reporter.log("Extent Report Directory" + resultDirectory, true);
             extent.addSystemInfo("Host Name", "Maximus").addSystemInfo("Environment","QA")
                     .addSystemInfo("User Name", "Sami Sheikh");

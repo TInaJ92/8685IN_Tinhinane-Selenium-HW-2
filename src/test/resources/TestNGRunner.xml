@@ -1,19 +1,25 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 
-<suite name="BAT" verbose="1" >
+<suite name="App" verbose="1" >
 
     <parameter name="browser" value="chrome"/>
 
-    <test name="Integration">
+    <test name="BAT - Integration">
         <parameter name="enabled" value="false"/>
         <classes>
             <class name="test_app.build_acceptance.integration.Connectivity"/>
         </classes>
     </test>
 
-    <test name="System">
+    <test name="BAT - System">
         <classes>
             <class name="test_app.build_acceptance.system.Authentication"/>
+        </classes>
+    </test>
+
+    <test name="Smoke">
+        <classes>
+            <class name="test_app.smoke.registration.Registration"/>
         </classes>
     </test>
 

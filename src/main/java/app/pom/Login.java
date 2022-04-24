@@ -9,8 +9,14 @@ public class Login extends SystemBar {
 
     public static final String URL = "http://automationpractice.com/index.php?controller=authentication&back=my-account";
 
+    @FindBy(id = "email_create")
+    public WebElement newEmailAddressInputField;
+
+    @FindBy(id = "SubmitCreate")
+    public WebElement createAccountButton;
+
     @FindBy(id = "email")
-    public WebElement emailAddressInputField;
+    public WebElement registeredEmailAddressInputField;
 
     @FindBy(xpath = "//div[@class='form-group form-error']")
     public WebElement invalidEmailInputField;
@@ -34,11 +40,37 @@ public class Login extends SystemBar {
         PageFactory.initElements(driver, this);
     }
 
-    public void enterEmailAddress(String emailAddress) {
-        sendKeysToElement(emailAddressInputField, emailAddress);
+    // region Create Account
+    public CreateAccount createAccount(String emailAddress) {
+        inputNewEmailAddress(emailAddress);
+        return clickCreateAccountButton();
     }
 
-    public void enterPassword(String password) {
+    public void inputNewEmailAddress(String emailAddress) {
+        sendKeysToElement(newEmailAddressInputField, emailAddress);
+    }
+
+    public CreateAccount clickCreateAccountButton() {
+        clickOnElement(createAccountButton);
+        return new CreateAccount();
+    }
+
+    // endregion
+
+    // region Login
+    public MyAccount login(String emailAddress, String password) {
+        inputRegisteredEmailAddress(emailAddress);
+        inputPassword(password);
+        clickSignInButton();
+
+        return new MyAccount();
+    }
+
+    public void inputRegisteredEmailAddress(String emailAddress) {
+        sendKeysToElement(registeredEmailAddressInputField, emailAddress);
+    }
+
+    public void inputPassword(String password) {
         sendKeysToElement(passwordInputField, password);
     }
 
@@ -46,11 +78,6 @@ public class Login extends SystemBar {
         clickOnElement(signInButton);
     }
 
-    public MyAccount login(String emailAddress, String password) {
-        enterEmailAddress(emailAddress);
-        enterPassword(password);
-        clickSignInButton();
+    // endregion
 
-        return new MyAccount();
-    }
 }

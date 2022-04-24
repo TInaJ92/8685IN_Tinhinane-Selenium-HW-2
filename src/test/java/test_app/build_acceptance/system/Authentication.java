@@ -17,7 +17,7 @@ public class Authentication extends TestBasePage {
 
         MyAccount myAccount = homepage.clickLoginButton().login(username, password);
 
-        Assert.assertTrue(isElementVisible(myAccount.myAccountButton));
+        Assert.assertTrue(isElementVisible(myAccount.accountButton));
     }
 
 //    @Test (groups = {"BAT"}, dataProviderClass = data_providers.DataProviders.class, dataProvider = "DP1")
