@@ -108,26 +108,14 @@ public class BasePage {
         actions.moveToElement(element).perform();
     }
 
-    public void dragDropElement(WebElement element) {
-
-    }
-
-    // TODO - Fix implementation
-    public WebElement setElementAttributeValueUsingXpath(String xPathLocator, String attribute, String value) {
-        jsDriver = (JavascriptExecutor) (driver);
-        jsDriver.executeScript("document.getElementByXpath('" + xPathLocator + "').setAttribute('" + attribute + "','"+ value + "');");
-
-        return driver.findElement(By.xpath(xPathLocator));
-    }
-
-    public String getElementText(WebElement element) {
+    public String getTrimmedElementText(WebElement element) {
         String text = "";
         webDriverWait.until(ExpectedConditions.visibilityOf(element));
 
-        text = element.getText();
+        text = element.getText().trim();
 
         if (text.equals("")) {
-            text = element.getAttribute("innerHTML");
+            text = element.getAttribute("innerHTML").trim();
         }
 
         return text;
@@ -138,25 +126,14 @@ public class BasePage {
         element.click();
     }
 
-    public void jsClickOnElement(WebElement element) {
-        jsDriver = (JavascriptExecutor) (driver);
-        jsDriver.executeScript("arguments[0].click();", element);
-    }
-
-    public void safeClickOnElement(WebElement element) {
-        try {
-            clickOnElement(element);
-        } catch (ElementClickInterceptedException | StaleElementReferenceException e) {
-            System.out.println("Unable to click - trying again");
-            jsClickOnElement(element);
-        } catch (TimeoutException | ElementNotVisibleException e) {
-            System.out.println("Unable to locate element - check element locator");
-            jsClickOnElement(element);
-        }
-    }
-
     public void sendKeysToElement(WebElement element, String keys) {
         webDriverWait.until(ExpectedConditions.visibilityOf(element));
+        element.sendKeys(keys);
+    }
+
+    public void clearSendKeysToElement(WebElement element, String keys) {
+        webDriverWait.until(ExpectedConditions.visibilityOf(element));
+        element.clear();
         element.sendKeys(keys);
     }
 
@@ -184,6 +161,14 @@ public class BasePage {
         return true;
     }
 
+    public void switchToParentFrame() {
+        driver.switchTo().defaultContent();
+    }
+
+    public void switchToFrameByElement(WebElement frame) {
+        driver.switchTo().frame(frame);
+    }
+
     public void switchToTab() {
         String parentHandle = driver.getWindowHandle();
 
@@ -195,6 +180,49 @@ public class BasePage {
             }
         }
     }
+
+    // region JavaScriptExecutor Methods
+    // TODO - Unit test and refactor as needed
+    public String jsGetTrimmedElementText(WebElement element) {
+        jsDriver = (JavascriptExecutor) (driver);
+        String query = "arguments[0].getPropertyValue('innerHTML');";
+
+        return jsDriver.executeScript(query, element).toString();
+    }
+
+    // TODO - Unit test and refactor as needed
+    public WebElement findElementByXPathJS(String xPath) {
+        jsDriver = (JavascriptExecutor) (driver);
+        String query = String.format("document.getElement(By.xpath(\"%s\")", xPath);
+        return (WebElement) (jsDriver.executeScript(query));
+    }
+
+    public void jsClickOnElement(WebElement element) {
+        jsDriver = (JavascriptExecutor) (driver);
+        jsDriver.executeScript("arguments[0].click();", element);
+    }
+
+    public void safeClickOnElement(WebElement element) {
+        try {
+            clickOnElement(element);
+        } catch (ElementClickInterceptedException | StaleElementReferenceException e) {
+            System.out.println("Unable to click - trying again");
+            jsClickOnElement(element);
+        } catch (TimeoutException | ElementNotVisibleException e) {
+            System.out.println("Unable to locate element - check element locator");
+            jsClickOnElement(element);
+        }
+    }
+
+    public WebElement setElementAttributeValue(String attribute, String value, By by) {
+        jsDriver = (JavascriptExecutor) (driver);
+        jsDriver.executeScript("arguments[0].setAttribute('" + attribute + "', '" + value + "')", driver.findElement(by));
+
+        return driver.findElement(by);
+    }
+
+
+    // endregion
 
     // endregion
 

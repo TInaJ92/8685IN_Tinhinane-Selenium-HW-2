@@ -1,11 +1,13 @@
 package app.pom;
 
-import app.shared.SystemBar;
+import app.shared.Products;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class SummerDresses extends SystemBar {
+public class SummerDresses extends Products {
 
     @FindBy(xpath = "//div[@id='layered_price_slider']/a[1]")
     public WebElement priceSliderLeft;
@@ -23,9 +25,16 @@ public class SummerDresses extends SystemBar {
         PageFactory.initElements(driver, this);
     }
 
-    public void moveRightPriceSlider(String percentage) {
-        if (Integer.parseInt(percentage) >= 0 && Integer.parseInt(percentage) < 101) {
-            priceSliderRight = setElementAttributeValueUsingXpath("//div[@id='layered_price_slider']/a[2]", "style", ("left: " + percentage + "%;"));
+    public void setUpperPriceRange(Double upperPriceRange) {
+        if (upperPriceRange >= 0 && upperPriceRange <= 100) {
+
+            Actions actions = new Actions(driver);
+
+            while (Double.parseDouble(driver.findElement(By.id("layered_price_range")).getText().substring(10)) > upperPriceRange) {
+                actions.clickAndHold(priceSliderRight).build().perform();
+                actions.moveByOffset(-5, 0).build().perform();
+                actions.release(priceSliderRight).build().perform();
+            }
         }
     }
 
@@ -36,9 +45,5 @@ public class SummerDresses extends SystemBar {
     public void clickPrintedChiffonDressQuickViewButton() {
         safeClickOnElement(printedChiffonDressQuickViewButton);
     }
-
-
-
-
 
 }

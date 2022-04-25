@@ -35,7 +35,7 @@ public class Registration extends TestBasePage {
         MyAccount myAccount = createAccount.registerNewUser(firstName, lastName, password, day, monthNumber, year,
                 streetAddress, city, state, zipCode, phoneNumber);
 
-        String name = getElementText(myAccount.accountButton);
+        String name = getTrimmedElementText(myAccount.accountButton);
         String[] splitName = name.split(" ");
         String actualFirstName = splitName[0];
         String actualLastName = splitName[1];
