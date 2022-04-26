@@ -11,7 +11,7 @@ public class AnnotationTransformer implements IAnnotationTransformer {
 
     @Override
     public void transform(ITestAnnotation annotation, Class testClass, Constructor testConstructor, Method testMethod) {
-        if (testMethod.getName().contains("Connectivity")) {
+        if (testMethod.getName().toLowerCase().contains("connectivity")) {
             annotation.setRetryAnalyzer(RetryAnalyzer.class);
         }
     }
