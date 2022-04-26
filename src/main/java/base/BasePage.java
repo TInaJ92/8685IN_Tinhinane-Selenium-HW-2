@@ -26,6 +26,7 @@ import utils.Database;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.*;
 
@@ -56,10 +57,10 @@ public class BasePage {
         ExtentTestManager.getTest().assignCategory(className);
     }
 
-    @Parameters({"enabled", "browser"})
+    @Parameters({"driverConfigEnabled", "browser"})
     @BeforeMethod
-    public void driverSetup(@Optional("true") String enabled, @Optional("chrome") String browser) {
-        if (enabled.equalsIgnoreCase("true")) {
+    public void driverSetup(@Optional("true") String driverConfigEnabled, @Optional("chrome") String browser) {
+        if (Boolean.parseBoolean(driverConfigEnabled)) {
             driverInit(browser);
             driver.get(appConfig.get(Config.AppProperties.URL));
             driver.manage().deleteAllCookies();
@@ -67,17 +68,18 @@ public class BasePage {
         }
     }
 
-    @Parameters({"enabled"})
+    @Parameters({"driverConfigEnabled"})
     @AfterMethod
-    public void cleanUp(@Optional("true") String enabled) {
-        if (enabled.equalsIgnoreCase("true")) {
+    public void cleanUp(@Optional("true") String driverConfigEnabled) {
+        if (Boolean.parseBoolean(driverConfigEnabled)) {
             driver.close();
             driver.quit();
         }
     }
 
+    @Parameters({"driverConfigEnabled"})
     @AfterMethod(alwaysRun = true)
-    public void afterEachTestMethod(ITestResult result) {
+    public void afterEachTestMethod(ITestResult result, @Optional("true") String driverConfigEnabled) {
 
         ExtentTestManager.getTest().getTest().setStartedTime(getTime(result.getStartMillis()));
         ExtentTestManager.getTest().getTest().setEndedTime(getTime(result.getEndMillis()));
@@ -89,7 +91,11 @@ public class BasePage {
         if (result.getStatus() == ITestResult.FAILURE) {
             ExtentTestManager.getTest().log(LogStatus.FAIL, "TEST CASE FAILED: " + result.getName());
             ExtentTestManager.getTest().log(LogStatus.FAIL, result.getThrowable());
-            captureScreenshot(driver, result.getName());
+
+            if (Boolean.parseBoolean(driverConfigEnabled)) {
+                captureScreenshot(driver, result.getName());
+            }
+
         } else if (result.getStatus() == ITestResult.SKIP) {
             ExtentTestManager.getTest().log(LogStatus.SKIP, "TEST CASE SKIPPED: " + result.getName());
         } else if (result.getStatus() == ITestResult.SUCCESS) {

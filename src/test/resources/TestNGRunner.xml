@@ -2,25 +2,29 @@
 
 <suite name="App" verbose="1" >
 
+    <listeners>
+        <listener class-name="listeners.AnnotationTransformer"/>
+    </listeners>
+
     <parameter name="browser" value="chrome"/>
 
     <test name="BAT - Integration">
-        <parameter name="enabled" value="false"/>
+        <parameter name="driverConfigEnabled" value="false"/>
         <classes>
             <class name="test_app.build_acceptance.integration.Connectivity"/>
         </classes>
     </test>
 
-    <test name="BAT - System">
-        <classes>
-            <class name="test_app.build_acceptance.system.Authentication"/>
-        </classes>
-    </test>
+<!--    <test name="BAT - System">-->
+<!--        <classes>-->
+<!--            <class name="test_app.build_acceptance.system.Authentication"/>-->
+<!--        </classes>-->
+<!--    </test>-->
 
-    <test name="Smoke">
-        <classes>
-            <class name="test_app.smoke.registration.Registration"/>
-        </classes>
-    </test>
+<!--    <test name="Smoke">-->
+<!--        <classes>-->
+<!--            <class name="test_app.smoke.registration.Registration"/>-->
+<!--        </classes>-->
+<!--    </test>-->
 
 </suite>

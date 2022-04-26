@@ -8,7 +8,7 @@ import test_base.TestBasePage;
 
 public class ShoppingCart extends TestBasePage {
 
-    @Test
+    @Test (retryAnalyzer = utils.RetryAnalyzer.class)
     public void testAddItemToCart() {
         Homepage homepage = new Homepage();
         homepage.hoverOverWomenButton();
