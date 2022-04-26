@@ -79,9 +79,6 @@ public class Products extends SystemBar {
         switchToShoppingCartQuickViewFrame();
         setProductQuantity(quantity);
         selectProductSize(size);
-
-        System.out.printf("SELECTED COLOR: %s%n", getSelectedColor());
-
         setColorAtRandom();
         clickSubmitButton();
         switchToParentFrame();

@@ -4,13 +4,15 @@ import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.LogStatus;
 import config.Config;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import listeners.DriverEventListener;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.events.EventFiringDecorator;
+import org.openqa.selenium.support.events.WebDriverListener;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -241,6 +243,10 @@ public class BasePage {
 
         webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(10));
         syncWait = new WebDriverWait(driver, Duration.ofSeconds(3));
+
+        WebDriverListener listener = new DriverEventListener();
+        driver = new EventFiringDecorator(listener).decorate(driver);
+
     }
 
     private static void captureScreenshot(WebDriver driver, String testName) {
