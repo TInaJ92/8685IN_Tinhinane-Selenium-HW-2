@@ -1,6 +1,7 @@
 package base;
 
 import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import config.Config;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -23,6 +24,7 @@ import org.testng.annotations.Optional;
 import reporting.ExtentManager;
 import reporting.ExtentTestManager;
 import utils.Database;
+import utils.RetryAnalyzer;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -79,27 +81,45 @@ public class BasePage {
 
     @Parameters({"driverConfigEnabled"})
     @AfterMethod(alwaysRun = true)
-    public void afterEachTestMethod(ITestResult result, @Optional("true") String driverConfigEnabled) {
+    public void afterEachTestMethod(ITestResult testResult, @Optional("true") String driverConfigEnabled) {
+        ExtentTest test = ExtentTestManager.getTest();
+        String testName = testResult.getName();
+        int testStatus = testResult.getStatus();
 
-        ExtentTestManager.getTest().getTest().setStartedTime(getTime(result.getStartMillis()));
-        ExtentTestManager.getTest().getTest().setEndedTime(getTime(result.getEndMillis()));
+        test.getTest().setStartedTime(getTime(testResult.getStartMillis()));
+        test.getTest().setEndedTime(getTime(testResult.getEndMillis()));
 
-        for (String group : result.getMethod().getGroups()) {
-            ExtentTestManager.getTest().assignCategory(group);
+        for (String group : testResult.getMethod().getGroups()) {
+            test.assignCategory(group);
         }
-
-        if (result.getStatus() == ITestResult.FAILURE) {
-            ExtentTestManager.getTest().log(LogStatus.FAIL, "TEST CASE FAILED: " + result.getName());
-            ExtentTestManager.getTest().log(LogStatus.FAIL, result.getThrowable());
+        if (testStatus == ITestResult.FAILURE) {
 
             if (Boolean.parseBoolean(driverConfigEnabled)) {
-                captureScreenshot(driver, result.getName());
+                captureScreenshot(driver, testName);
+                captureFullScreenshot(driver, testName);
             }
 
-        } else if (result.getStatus() == ITestResult.SKIP) {
-            ExtentTestManager.getTest().log(LogStatus.SKIP, "TEST CASE SKIPPED: " + result.getName());
-        } else if (result.getStatus() == ITestResult.SUCCESS) {
-            ExtentTestManager.getTest().log(LogStatus.PASS, "TEST CASE PASSED: " + result.getName());
+            if (testResult.getMethod().getRetryAnalyzer(testResult) != null) {
+                RetryAnalyzer retryAnalyzer = (RetryAnalyzer) testResult.getMethod().getRetryAnalyzer(testResult);
+
+                if (retryAnalyzer.canRetry()) {
+                    testResult.setStatus(ITestResult.SKIP);
+                    test.log(LogStatus.SKIP,
+                            "RETRYING TEST CASE: " + testName + " - RETRY " + retryAnalyzer.count + "/" + retryAnalyzer.maxRetry);
+                } else {
+                    testResult.setStatus(ITestResult.FAILURE);
+                    test.log(LogStatus.FAIL, "TEST CASE FAILED: " + testName);
+                    test.log(LogStatus.FAIL, testResult.getThrowable());
+                }
+
+            } else {
+                test.log(LogStatus.FAIL, "TEST CASE FAILED: " + testName);
+                test.log(LogStatus.FAIL, testResult.getThrowable());
+            }
+        } else if (testStatus == ITestResult.SKIP) {
+            test.log(LogStatus.SKIP, "TEST CASE SKIPPED: " + testName);
+        } else if (testStatus == ITestResult.SUCCESS) {
+            test.log(LogStatus.PASS, "TEST CASE PASSED: " + testName);
         }
 
         ExtentTestManager.endTest();
@@ -258,14 +278,10 @@ public class BasePage {
     private static void captureScreenshot(WebDriver driver, String testName) {
         String absPath = System.getProperty("user.dir");
         String screenshotFileName = "screenshot_" + testName + ".png";
-        String fullScreenshotFileName = "full_screenshot_" + testName + ".png";
 
         File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         File screenshotFile = new File(absPath + File.separator + "src" + File.separator + "test"
                 + File.separator + "reports" + File.separator + screenshotFileName);
-        File fullScreenshot = ((ChromeDriver) driver).getScreenshotAs(OutputType.FILE);
-        File fullScreenshotFile = new File(absPath + File.separator + "src" + File.separator + "test"
-                + File.separator + "reports" + File.separator + fullScreenshotFileName);
 
         try {
             FileHandler.copy(screenshot, screenshotFile);
@@ -273,6 +289,15 @@ public class BasePage {
         } catch (Exception e) {
             System.out.println("ERROR TAKING SCREENSHOT: " + e.getMessage());
         }
+    }
+
+    private static void captureFullScreenshot(WebDriver driver, String testName) {
+        String absPath = System.getProperty("user.dir");
+        String fullScreenshotFileName = "full_screenshot_" + testName + ".png";
+
+        File fullScreenshot = ((ChromeDriver) driver).getScreenshotAs(OutputType.FILE);
+        File fullScreenshotFile = new File(absPath + File.separator + "src" + File.separator + "test"
+                + File.separator + "reports" + File.separator + fullScreenshotFileName);
 
         try {
             FileHandler.copy(fullScreenshot, fullScreenshotFile);
