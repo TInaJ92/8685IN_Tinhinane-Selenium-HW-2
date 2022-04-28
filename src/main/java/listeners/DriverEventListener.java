@@ -195,7 +195,7 @@ public class DriverEventListener implements WebDriverListener {
 
     @Override
     public void afterClick(WebElement element) {
-        System.out.printf("Successfully clicked on element with tag: %s%n", element.getTagName());
+        System.out.println("Successfully clicked on element");
     }
 
     @Override

@@ -1,18 +1,21 @@
 package test_app.build_acceptance.integration;
 
+import annotations.RetryCount;
 import config.Config;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import test_base.TestBasePage;
+import test_base.BaseTest;
 import utils.Database;
+import utils.RetryAnalyzer;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.sql.SQLException;
 
-public class Connectivity extends TestBasePage {
+public class TestConnectivity extends BaseTest {
 
-    @Test (groups = {"BAT"}, priority = 1)
+    @RetryCount(2)
+    @Test (groups = {"BAT"}, priority = 1, retryAnalyzer = RetryAnalyzer.class)
     public void testAppServerConnectivity() {
         boolean isConnected = false;
 
@@ -23,17 +26,18 @@ public class Connectivity extends TestBasePage {
                 isConnected = true;
             }
         } catch (IOException e) {
-            System.out.println("HOST IS NOT REACHABLE");
+            System.out.println("HOST IS UNREACHABLE");
             e.printStackTrace();
         }
+
         Assert.assertTrue(isConnected);
     }
 
+    @RetryCount(2)
     @Test (groups = {"BAT"}, priority = 2)
     public void testDatabaseConnectivity() throws SQLException {
-        database = new Database();
         String query = "SELECT 1 FROM DUAL";
-        String response = database.executeQueryReadOne(query).toString();
+        String response = db.executeQueryReadOne(query).toString();
         Assert.assertEquals(response, "1", "DATABASE NOT CONNECTED");
     }
 }

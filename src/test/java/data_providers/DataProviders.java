@@ -1,31 +1,26 @@
 package data_providers;
 
 import org.testng.annotations.DataProvider;
+import test_base.BaseTest;
 import utils.ExcelData;
 
 import java.io.File;
 import java.io.IOException;
 
-public class DataProviders {
-
-    ExcelData excel = new ExcelData();
-    String absPath = System.getProperty("user.dir");
-    String relPath = File.separator + "src" + File.separator + "test" + File.separator + "resources"
-            + File.separator + "test_data.xlsx";
-    String path = absPath + relPath;
+public class DataProviders extends BaseTest {
 
     @DataProvider (name = "DP1")
-    public Object[][] getValidEmailInvalidPasswordLoginData() throws IOException {
+    public Object[][] getValidEmailInvalidPasswordLoginData() {
         String sheetName = "LoginValidEmailInvalidPass";
 
-        return excel.readStringArrays(path, sheetName);
+        return excel.readStringArrays(sheetName);
     }
 
     @DataProvider (name = "DP2")
-    public Object[][] getInvalidEmailValidPasswordLoginData() throws IOException {
+    public Object[][] getInvalidEmailValidPasswordLoginData() {
         String sheetName = "LoginInvalidEmailValidPass";
 
-        return excel.readStringArrays(path, sheetName);
+        return excel.readStringArrays(sheetName);
     }
 
 }

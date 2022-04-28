@@ -14,31 +14,25 @@ import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.events.WebDriverListener;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 import org.testng.annotations.Optional;
 import reporting.ExtentManager;
 import reporting.ExtentTestManager;
-import utils.Database;
-import utils.RetryAnalyzer;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.sql.SQLException;
 import java.time.Duration;
 import java.util.*;
 
 public class BasePage {
 
     public static Map<Object, String> appConfig = Config.appConfig();
-    public static Map<Object, String> databaseConfig = Config.databaseConfig();
-    public static Database db = new Database();
     public static WebDriver driver;
     public static WebDriverWait webDriverWait;
+    public static Wait<WebDriver> fluentWait;
     public static WebDriverWait syncWait;
     public static ExtentReports extent;
     public static JavascriptExecutor jsDriver;
@@ -93,29 +87,12 @@ public class BasePage {
             test.assignCategory(group);
         }
         if (testStatus == ITestResult.FAILURE) {
-
             if (Boolean.parseBoolean(driverConfigEnabled)) {
                 captureScreenshot(driver, testName);
-                captureFullScreenshot(driver, testName);
             }
+            test.log(LogStatus.FAIL, "TEST CASE FAILED: " + testName);
+            test.log(LogStatus.FAIL, testResult.getThrowable());
 
-            if (testResult.getMethod().getRetryAnalyzer(testResult) != null) {
-                RetryAnalyzer retryAnalyzer = (RetryAnalyzer) testResult.getMethod().getRetryAnalyzer(testResult);
-
-                if (retryAnalyzer.canRetry()) {
-                    testResult.setStatus(ITestResult.SKIP);
-                    test.log(LogStatus.SKIP,
-                            "RETRYING TEST CASE: " + testName + " - RETRY " + retryAnalyzer.count + "/" + retryAnalyzer.maxRetry);
-                } else {
-                    testResult.setStatus(ITestResult.FAILURE);
-                    test.log(LogStatus.FAIL, "TEST CASE FAILED: " + testName);
-                    test.log(LogStatus.FAIL, testResult.getThrowable());
-                }
-
-            } else {
-                test.log(LogStatus.FAIL, "TEST CASE FAILED: " + testName);
-                test.log(LogStatus.FAIL, testResult.getThrowable());
-            }
         } else if (testStatus == ITestResult.SKIP) {
             test.log(LogStatus.SKIP, "TEST CASE SKIPPED: " + testName);
         } else if (testStatus == ITestResult.SUCCESS) {
@@ -129,16 +106,37 @@ public class BasePage {
     // endregion
 
     // region Selenium API
+    public WebElement getVisibleElement(By by) {
+        try {
+            fluentWait.until(ExpectedConditions.visibilityOfElementLocated(by));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return driver.findElement(by);
+    }
+
+    public WebElement getClickableElement(By by) {
+        try {
+            fluentWait.until(ExpectedConditions.elementToBeClickable(by));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return driver.findElement(by);
+
+    }
+
     public void hoverOverElement(WebElement element) {
         Actions actions = new Actions(driver);
 
-        webDriverWait.until(ExpectedConditions.visibilityOf(element));
+        fluentWait.until(ExpectedConditions.visibilityOf(element));
         actions.moveToElement(element).perform();
     }
 
     public String getTrimmedElementText(WebElement element) {
         String text = "";
-        webDriverWait.until(ExpectedConditions.visibilityOf(element));
+        fluentWait.until(ExpectedConditions.visibilityOf(element));
 
         text = element.getText().trim();
 
@@ -187,6 +185,10 @@ public class BasePage {
             return false;
         }
         return true;
+    }
+
+    public void waitForInvisibilityOfElement(WebElement element) {
+        fluentWait.until(ExpectedConditions.invisibilityOf(element));
     }
 
     public void switchToParentFrame() {
@@ -269,6 +271,10 @@ public class BasePage {
 
         webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(10));
         syncWait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        fluentWait = new FluentWait<>(driver)
+                .withTimeout(Duration.ofSeconds(30))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(Exception.class);
 
         WebDriverListener listener = new DriverEventListener();
         driver = new EventFiringDecorator(listener).decorate(driver);

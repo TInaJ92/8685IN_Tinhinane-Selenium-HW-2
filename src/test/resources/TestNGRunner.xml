@@ -11,19 +11,19 @@
     <test name="BAT - Integration">
         <parameter name="driverConfigEnabled" value="false"/>
         <classes>
-            <class name="test_app.build_acceptance.integration.Connectivity"/>
+            <class name="test_app.build_acceptance.integration.TestConnectivity"/>
         </classes>
     </test>
 
 <!--    <test name="BAT - System">-->
 <!--        <classes>-->
-<!--            <class name="test_app.build_acceptance.system.Authentication"/>-->
+<!--            <class name="test_app.build_acceptance.system.TestAuthentication"/>-->
 <!--        </classes>-->
 <!--    </test>-->
 
 <!--    <test name="Smoke">-->
 <!--        <classes>-->
-<!--            <class name="test_app.smoke.registration.Registration"/>-->
+<!--            <class name="test_app.smoke.registration.TestRegistration"/>-->
 <!--        </classes>-->
 <!--    </test>-->
 

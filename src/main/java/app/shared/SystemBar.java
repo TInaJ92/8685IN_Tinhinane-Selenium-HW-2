@@ -3,7 +3,6 @@ package app.shared;
 import app.pom.ContactUs;
 import app.pom.Homepage;
 import app.pom.Login;
-import app.pom.SummerDresses;
 import base.BasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -61,10 +60,10 @@ public class SystemBar extends BasePage {
         hoverOverElement(womenButton);
     }
 
-    public SummerDresses clickWomenHoverMenuDressesSummerDressesButton() {
+    public Catalog clickWomenHoverMenuDressesSummerDressesButton() {
         safeClickOnElement(womenHoverMenuDressesSummerDressesButton);
 
-        return new SummerDresses();
+        return new Catalog();
     }
 
     public boolean isSignedIn() {

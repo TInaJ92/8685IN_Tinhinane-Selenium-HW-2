@@ -1,28 +1,29 @@
 package test_app.smoke.transactions;
 
+import annotations.RetryCount;
 import app.pom.Homepage;
-import app.pom.SummerDresses;
+import app.shared.Catalog;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import test_base.TestBasePage;
+import test_base.BaseTest;
 
-public class ShoppingCart extends TestBasePage {
+public class TestShoppingCart extends BaseTest {
 
-    @Test (retryAnalyzer = utils.RetryAnalyzer.class)
+    @RetryCount(1)
+    @Test
     public void testAddItemToCart() {
         Homepage homepage = new Homepage();
         homepage.hoverOverWomenButton();
-        SummerDresses summerDresses = homepage.clickWomenHoverMenuDressesSummerDressesButton();
+        Catalog summerDresses = homepage.clickWomenHoverMenuDressesSummerDressesButton();
 
-        summerDresses.setUpperPriceRange(20.00);
-        summerDresses.hoverOverFirstItem();
-        summerDresses.clickPrintedChiffonDressQuickViewButton();
+        summerDresses.setPriceSliderUpperPriceRange(20.00);
+        summerDresses.clickItemByIndex(0);
 
         int desiredQuantity = 3;
         String size = "M";
         summerDresses.addItemToCart(desiredQuantity, size);
 
-        String expectedMessage = "Product successfully added to your shopping cart";
+        String expectedMessage = excel.readStringArray("testAddItemToCart")[0];
 
         Assert.assertEquals(summerDresses.getShoppingCartModalSuccessOrFailMessage(), expectedMessage);
         Assert.assertEquals(summerDresses.getShoppingCartModalQuantityCount(), desiredQuantity);

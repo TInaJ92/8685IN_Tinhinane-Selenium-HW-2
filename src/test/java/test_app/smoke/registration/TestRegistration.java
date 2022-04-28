@@ -6,10 +6,10 @@ import app.pom.Login;
 import app.pom.MyAccount;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import test_base.TestBasePage;
+import test_base.BaseTest;
 import utils.GenerateData;
 
-public class Registration extends TestBasePage {
+public class TestRegistration extends BaseTest {
 
     @Test
     public void testProcessNewUserRegistration() {
