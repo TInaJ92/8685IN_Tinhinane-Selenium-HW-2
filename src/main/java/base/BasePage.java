@@ -1,5 +1,6 @@
 package base;
 
+import com.github.javafaker.Bool;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
@@ -21,14 +22,18 @@ import org.testng.annotations.*;
 import org.testng.annotations.Optional;
 import reporting.ExtentManager;
 import reporting.ExtentTestManager;
+import utils.Database;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.*;
+import java.util.NoSuchElementException;
 
 public class BasePage {
 
+    public static Database db;
     public static Map<Object, String> appConfig = Config.appConfig();
     public static WebDriver driver;
     public static WebDriverWait webDriverWait;
@@ -53,27 +58,44 @@ public class BasePage {
         ExtentTestManager.getTest().assignCategory(className);
     }
 
-    @Parameters({"driverConfigEnabled", "browser"})
-    @BeforeMethod
-    public void driverSetup(@Optional("true") String driverConfigEnabled, @Optional("chrome") String browser) {
-        if (Boolean.parseBoolean(driverConfigEnabled)) {
+    @BeforeMethod(alwaysRun = true)
+    public void dbInit() {
+        db = new Database();
+    }
+
+    @Parameters({"browser", "canRunDriver"})
+    @BeforeMethod (groups = {"functional"})
+    public void driverSetup(@Optional("chrome") String browser, @Optional("true") String canRunDriver) {
+        if (Boolean.parseBoolean(canRunDriver)) {
             driverInit(browser);
             driver.get(appConfig.get(Config.AppProperties.URL));
             driver.manage().deleteAllCookies();
             driver.manage().window().maximize();
         }
+
     }
 
-    @Parameters({"driverConfigEnabled"})
-    @AfterMethod
-    public void cleanUp(@Optional("true") String driverConfigEnabled) {
-        if (Boolean.parseBoolean(driverConfigEnabled)) {
-            driver.close();
-            driver.quit();
+    @Parameters()
+    @AfterMethod (dependsOnGroups = {"functional"})
+    public void cleanUp() {
+        driver.close();
+        driver.quit();
+
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void dbCleanUp() {
+        try {
+            db.connect.close();
+            System.out.println("SUCCESSFULLY CLOSED DATABASE CONNECTION");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e1) {
+            System.out.println("DID NOT ATTEMPT TO CLOSE EMPTY DATABASE CONNECTION");
         }
     }
 
-    @Parameters({"driverConfigEnabled"})
+    @Parameters()
     @AfterMethod(alwaysRun = true)
     public void afterEachTestMethod(ITestResult testResult, @Optional("true") String driverConfigEnabled) {
         ExtentTest test = ExtentTestManager.getTest();
@@ -87,7 +109,7 @@ public class BasePage {
             test.assignCategory(group);
         }
         if (testStatus == ITestResult.FAILURE) {
-            if (Boolean.parseBoolean(driverConfigEnabled)) {
+            if (driver != null) {
                 captureScreenshot(driver, testName);
             }
             test.log(LogStatus.FAIL, "TEST CASE FAILED: " + testName);
@@ -238,8 +260,9 @@ public class BasePage {
         } catch (ElementClickInterceptedException | StaleElementReferenceException e) {
             System.out.println("Unable to click - trying again");
             jsClickOnElement(element);
-        } catch (TimeoutException | ElementNotVisibleException e) {
-            System.out.println("Unable to locate element - check element locator");
+        } catch (TimeoutException | NoSuchElementException e) {
+            System.out.println("Unable to locate element - check element locator and ensure element is being made available");
+        } catch (ElementNotVisibleException e) {
             jsClickOnElement(element);
         }
     }
@@ -250,7 +273,6 @@ public class BasePage {
 
         return driver.findElement(by);
     }
-
 
     // endregion
 

@@ -10,11 +10,11 @@ import test_base.BaseTest;
 public class TestShoppingCart extends BaseTest {
 
     @RetryCount(1)
-    @Test
+    @Test (groups = {"smoke"})
     public void testAddItemToCart() {
         Homepage homepage = new Homepage();
-        homepage.hoverOverWomenButton();
-        Catalog summerDresses = homepage.clickWomenHoverMenuDressesSummerDressesButton();
+        homepage.hoverWomenCategoriesButton();
+        Catalog summerDresses = homepage.clickSummerDressesButtonWomenCategoriesHoverMenu();
 
         summerDresses.setPriceSliderUpperPriceRange(20.00);
         summerDresses.clickItemByIndex(0);

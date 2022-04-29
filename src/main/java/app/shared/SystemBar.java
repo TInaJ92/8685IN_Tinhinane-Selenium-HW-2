@@ -4,6 +4,8 @@ import app.pom.ContactUs;
 import app.pom.Homepage;
 import app.pom.Login;
 import base.BasePage;
+import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -22,17 +24,18 @@ public class SystemBar extends BasePage {
     @FindBy(xpath = "//a[@class='account']")
     public WebElement accountButton;
 
+    // TODO - Abstract xpath generation based on ENUM values for categories (Women, Dresses, T-shirts)
     @FindBy(xpath = "//ul[@class='sf-menu clearfix menu-content sf-js-enabled sf-arrows']//a[@title='Women']")
-    public WebElement womenButton;
-
-    @FindBy(xpath = "//ul[@style='display: block;']//a[@title='Summer Dresses']")
-    public WebElement womenHoverMenuDressesSummerDressesButton;
+    public WebElement womenCategoryButton;
 
     @FindBy(xpath = "//ul[@class='sf-menu clearfix menu-content sf-js-enabled sf-arrows']/li/a[@title='Dresses']")
     public WebElement dressesButton;
 
     @FindBy(xpath = "//ul[@class='sf-menu clearfix menu-content sf-js-enabled sf-arrows']/li/a[@title='T-shirts']")
     public WebElement tShirtsButton;
+
+    @FindBy(xpath = "//ul[@style='display: block;']//a[@title='Summer Dresses']")
+    public WebElement summerDressesButtonWomenCategoriesHoverMenu;
 
     public SystemBar() {
         PageFactory.initElements(driver, this);
@@ -45,6 +48,12 @@ public class SystemBar extends BasePage {
     }
 
     public Homepage clickLogoutButton() {
+        try {
+            isElementVisible(logoutButton);
+        } catch (ElementNotVisibleException | TimeoutException e) {
+            System.out.println("Logout button was not made visible");
+        }
+
         safeClickOnElement(logoutButton);
 
         return new Homepage();
@@ -56,12 +65,54 @@ public class SystemBar extends BasePage {
         return new ContactUs();
     }
 
-    public void hoverOverWomenButton() {
-        hoverOverElement(womenButton);
+    public Catalog clickWomenCategoriesButton() {
+        try {
+            isElementVisible(womenCategoryButton);
+        } catch (ElementNotVisibleException | TimeoutException e) {
+            System.out.println("Women Category button was not made visible");
+        }
+
+        safeClickOnElement(womenCategoryButton);
+
+        return new Catalog();
     }
 
-    public Catalog clickWomenHoverMenuDressesSummerDressesButton() {
-        safeClickOnElement(womenHoverMenuDressesSummerDressesButton);
+    public Catalog clickDressesButton() {
+        try {
+            isElementVisible(dressesButton);
+        } catch (ElementNotVisibleException | TimeoutException e) {
+            System.out.println("Dresses button was not made visible");
+        }
+
+        safeClickOnElement(dressesButton);
+
+        return new Catalog();
+    }
+
+    public Catalog clickTShirtsButton() {
+        try {
+            isElementVisible(tShirtsButton);
+        } catch (ElementNotVisibleException | TimeoutException e) {
+            System.out.println("Dresses button was not made visible");
+        }
+
+        safeClickOnElement(tShirtsButton);
+
+        return new Catalog();
+    }
+
+    public void hoverWomenCategoriesButton() {
+        try {
+            isElementVisible(womenCategoryButton);
+        } catch (ElementNotVisibleException | TimeoutException e) {
+            System.out.println("Women Category button was not made visible");
+        }
+
+        hoverOverElement(womenCategoryButton);
+    }
+
+    public Catalog clickSummerDressesButtonWomenCategoriesHoverMenu() {
+        safeClickOnElement(summerDressesButtonWomenCategoriesHoverMenu);
 
         return new Catalog();
     }

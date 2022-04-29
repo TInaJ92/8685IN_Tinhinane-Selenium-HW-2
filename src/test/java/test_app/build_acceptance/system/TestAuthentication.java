@@ -10,7 +10,7 @@ import test_base.BaseTest;
 
 public class TestAuthentication extends BaseTest {
 
-    @Test (groups = {"BAT"})
+    @Test (groups = {"functional", "bat", "system", "authentication"}, priority = 1)
     public void testValidLogin() {
         Homepage homepage = new Homepage();
         String username = appConfig.get(Config.AppProperties.USER);
@@ -21,14 +21,15 @@ public class TestAuthentication extends BaseTest {
         Assert.assertTrue(isElementVisible(myAccount.accountButton));
     }
 
-    @Test (groups = {"BAT"}, dataProviderClass = data_providers.DataProviders.class, dataProvider = "DP1")
+    @Test (groups = {"functional", "bat", "system", "authentication"}, priority = 2,
+            dataProviderClass = data_providers.DataProviders.class, dataProvider = "DP1")
     public void testInvalidLogin(String username, String password) {
         Homepage homepage = new Homepage();
         Login login = homepage.clickLoginButton();
         login.login(username, password);
         String expectedText;
 
-        if (isElementVisible(login.invalidEmailInputField)) {
+        if (!username.contains("@")) {
             expectedText = "Invalid email address.";
         } else {
             expectedText = "Authentication failed.";

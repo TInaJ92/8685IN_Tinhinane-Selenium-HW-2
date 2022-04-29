@@ -10,14 +10,14 @@ import java.io.IOException;
 public class DataProviders extends BaseTest {
 
     @DataProvider (name = "DP1")
-    public Object[][] getValidEmailInvalidPasswordLoginData() {
+    public static Object[][] getValidEmailInvalidPasswordLoginData() {
         String sheetName = "LoginValidEmailInvalidPass";
 
         return excel.readStringArrays(sheetName);
     }
 
     @DataProvider (name = "DP2")
-    public Object[][] getInvalidEmailValidPasswordLoginData() {
+    public static Object[][] getInvalidEmailValidPasswordLoginData() {
         String sheetName = "LoginInvalidEmailValidPass";
 
         return excel.readStringArrays(sheetName);

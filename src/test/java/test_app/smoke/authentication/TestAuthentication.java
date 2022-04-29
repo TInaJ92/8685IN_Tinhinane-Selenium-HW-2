@@ -1,4 +1,4 @@
-package test_app.smoke.registration;
+package test_app.smoke.authentication;
 
 import app.pom.CreateAccount;
 import app.pom.Homepage;
@@ -9,9 +9,9 @@ import org.testng.annotations.Test;
 import test_base.BaseTest;
 import utils.GenerateData;
 
-public class TestRegistration extends BaseTest {
+public class TestAuthentication extends BaseTest {
 
-    @Test
+    @Test (groups = {"functional", "smoke", "registration"})
     public void testProcessNewUserRegistration() {
         Homepage homepage = new Homepage();
         Login login = homepage.clickLoginButton();
@@ -43,5 +43,11 @@ public class TestRegistration extends BaseTest {
         Assert.assertTrue(isElementVisible(myAccount.accountButton));
         Assert.assertTrue(firstName.equalsIgnoreCase(actualFirstName));
         Assert.assertTrue(lastName.equalsIgnoreCase(actualLastName));
+    }
+
+    @Test
+    public void testLogout() {
+        Homepage homepage = new Homepage();
+
     }
 }

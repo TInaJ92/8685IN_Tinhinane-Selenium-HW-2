@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class TestConnectivity extends BaseTest {
 
     @RetryCount(2)
-    @Test (groups = {"BAT"}, priority = 1, retryAnalyzer = RetryAnalyzer.class)
+    @Test (groups = {"integration", "bat", "connectivity"}, priority = 1, retryAnalyzer = RetryAnalyzer.class)
     public void testAppServerConnectivity() {
         boolean isConnected = false;
 
@@ -34,7 +34,7 @@ public class TestConnectivity extends BaseTest {
     }
 
     @RetryCount(2)
-    @Test (groups = {"BAT"}, priority = 2)
+    @Test (groups = {"integration", "bat", "connectivity"}, priority = 2)
     public void testDatabaseConnectivity() throws SQLException {
         String query = "SELECT 1 FROM DUAL";
         String response = db.executeQueryReadOne(query).toString();
