@@ -5,6 +5,8 @@ import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import config.Config;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import listeners.DriverEventListener;
 import org.openqa.selenium.*;
@@ -64,7 +66,7 @@ public class BasePage {
     }
 
     @Parameters({"browser", "canRunDriver"})
-    @BeforeMethod (groups = {"functional"})
+    @BeforeMethod
     public void driverSetup(@Optional("chrome") String browser, @Optional("true") String canRunDriver) {
         if (Boolean.parseBoolean(canRunDriver)) {
             driverInit(browser);
@@ -72,15 +74,15 @@ public class BasePage {
             driver.manage().deleteAllCookies();
             driver.manage().window().maximize();
         }
-
     }
 
-    @Parameters()
-    @AfterMethod (dependsOnGroups = {"functional"})
-    public void cleanUp() {
+
+
+    @Parameters({"canRunDriver"})
+    @AfterMethod ()
+    public void cleanUp(@Optional("true") String canRunDriver) {
         driver.close();
         driver.quit();
-
     }
 
     @AfterMethod(alwaysRun = true)

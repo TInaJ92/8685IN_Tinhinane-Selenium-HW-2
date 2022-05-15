@@ -6,7 +6,7 @@ import app.pom.MyAccount;
 import config.Config;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import test_base.BaseTest;
+import base_test.BaseTest;
 
 public class TestAuthentication extends BaseTest {
 

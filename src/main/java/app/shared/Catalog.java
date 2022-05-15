@@ -59,12 +59,12 @@ public class Catalog extends SystemBar {
         PageFactory.initElements(driver, this);
     }
 
-    public void addItemToCart(int quantity, String size) {
+    public void addItemToCartFromQuickViewFrame(double quantity, String size) {
         switchToShoppingCartQuickViewFrame();
-        setProductQuantity(quantity);
-        selectProductSize(size);
-        setColorAtRandom();
-        clickSubmitButton();
+        setProductQuantityQuickViewFrame(quantity);
+        selectProductSizeQuickViewFrame(size);
+        setColorAtRandomQuickViewFrame();
+        clickSubmitButtonQuickViewFrame();
         switchToParentFrame();
     }
 
@@ -73,12 +73,12 @@ public class Catalog extends SystemBar {
         if (upperPriceRange >= 0 && upperPriceRange <= 100) {
 
             Actions actions = new Actions(driver);
+            actions.clickAndHold(priceSliderRight).build().perform();
 
             while (Double.parseDouble(driver.findElement(By.id("layered_price_range")).getText().substring(10)) > upperPriceRange) {
-                actions.clickAndHold(priceSliderRight).build().perform();
-                actions.moveByOffset(-5, 0).build().perform();
-                actions.release(priceSliderRight).build().perform();
+                actions.moveByOffset(-3, 0).build().perform();
             }
+            actions.release(priceSliderRight).build().perform();
         }
     }
 
@@ -98,11 +98,11 @@ public class Catalog extends SystemBar {
         switchToFrameByElement(iFrameQuickViewShoppingCart);
     }
 
-    public void setProductQuantity(int quantity) {
+    public void setProductQuantityQuickViewFrame(double quantity) {
         clearSendKeysToElement(quantityField, String.valueOf(quantity));
     }
 
-    public void selectProductSize(String size) {
+    public void selectProductSizeQuickViewFrame(String size) {
         if (size.equalsIgnoreCase("S") || size.equalsIgnoreCase("M") || size.equalsIgnoreCase("L")) {
             selectFromDropdownByVisibleText(sizeComboBox, size.toUpperCase());
         }
@@ -112,11 +112,11 @@ public class Catalog extends SystemBar {
         return selectedColor.getAttribute("title").trim();
     }
 
-    public List<WebElement> getUnselectedColors(){
+    public List<WebElement> getUnselectedColors() {
         return driver.findElements(By.xpath("//ul[@id='color_to_pick_list']/li[not(contains(@class,'selected'))]/a"));
     }
 
-    public void setColorAtRandom() {
+    public void setColorAtRandomQuickViewFrame() {
         List<WebElement> unselectedColors = getUnselectedColors();
         if (unselectedColors.size() == 1) {
             clickOnElement(unselectedColors.get(0));
@@ -127,7 +127,7 @@ public class Catalog extends SystemBar {
         }
     }
 
-    public void clickSubmitButton() {
+    public void clickSubmitButtonQuickViewFrame() {
         safeClickOnElement(submitButton);
     }
 

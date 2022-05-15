@@ -6,12 +6,12 @@ import app.pom.Login;
 import app.pom.MyAccount;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import test_base.BaseTest;
+import base_test.BaseTest;
 import utils.GenerateData;
 
 public class TestAuthentication extends BaseTest {
 
-    @Test (groups = {"functional", "smoke", "registration"})
+    @Test (groups = {"smoke", "registration"})
     public void testProcessNewUserRegistration() {
         Homepage homepage = new Homepage();
         Login login = homepage.clickLoginButton();
@@ -43,11 +43,5 @@ public class TestAuthentication extends BaseTest {
         Assert.assertTrue(isElementVisible(myAccount.accountButton));
         Assert.assertTrue(firstName.equalsIgnoreCase(actualFirstName));
         Assert.assertTrue(lastName.equalsIgnoreCase(actualLastName));
-    }
-
-    @Test
-    public void testLogout() {
-        Homepage homepage = new Homepage();
-
     }
 }

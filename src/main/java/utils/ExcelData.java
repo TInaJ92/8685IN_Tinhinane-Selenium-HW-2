@@ -11,7 +11,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ExcelData {
 
@@ -28,6 +30,41 @@ public class ExcelData {
     }
 
     // region Readers
+    public HashMap<String, String> getDataModel(String sheetName) {
+        HashMap<String, String> data = new HashMap<>();
+
+        try {
+            FileInputStream fis = new FileInputStream(this.filePath);
+            workbook = new XSSFWorkbook(fis);
+        } catch (IOException e) {
+            System.out.println("Unable to load file - Check file path, or if the file actually exists in file path directory");
+            e.printStackTrace();
+        }
+
+        sheet = workbook.getSheet(sheetName);
+        numberOfRows = sheet.getLastRowNum();
+        numberOfCol = sheet.getRow(numberOfRows).getLastCellNum();
+
+        String[][] tempData = new String[numberOfRows][numberOfCol];
+
+        for (int i = 1; i <= numberOfRows; i++) {
+            row = sheet.getRow(i);
+            for (int j = 0; j < 2; j++) {
+                cell = row.getCell(j);
+                String cellData = getCellValue(cell);
+                tempData[i-1][j] = cellData;
+            }
+        }
+
+        for (String[] row: tempData) {
+            String key = row[0];
+            String value = row[1];
+            data.put(key, value);
+        }
+
+        return data;
+    }
+
     /**
      * Read all rows and columns (String values only) and return the results as a multi-dimensional String Array
      *
@@ -57,7 +94,7 @@ public class ExcelData {
             row = sheet.getRow(i);
             for (int j = 0; j < numberOfCol; j++) {
                 cell = row.getCell(j);
-                String cellData = getCellValue(cell);
+                String cellData = (String) (getCellValue(cell));
                 data[i-1][j] = cellData;
             }
         }
@@ -128,7 +165,7 @@ public class ExcelData {
         for (int i = 1; i <= numberOfRows; i++) {
             row = sheet.getRow(i);
             cell = row.getCell(0);
-            String cellData = getCellValue(cell);
+            String cellData = (String) getCellValue(cell);
             data[i - 1] = cellData;
         }
 
@@ -196,7 +233,7 @@ public class ExcelData {
         for (int i = 1; i <= numberOfRows; i++) {
             row = sheet.getRow(i);
             cell = row.getCell(0);
-            String cellData = getCellValue(cell);
+            String cellData = (String) getCellValue(cell);
             data.add(i-1, cellData);
         }
         return data;

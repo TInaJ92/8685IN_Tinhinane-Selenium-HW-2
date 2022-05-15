@@ -1,11 +1,7 @@
 package data_providers;
 
 import org.testng.annotations.DataProvider;
-import test_base.BaseTest;
-import utils.ExcelData;
-
-import java.io.File;
-import java.io.IOException;
+import base_test.BaseTest;
 
 public class DataProviders extends BaseTest {
 

@@ -4,8 +4,7 @@ import annotations.RetryCount;
 import config.Config;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import test_base.BaseTest;
-import utils.Database;
+import base_test.BaseTest;
 import utils.RetryAnalyzer;
 
 import java.io.IOException;
@@ -15,7 +14,7 @@ import java.sql.SQLException;
 public class TestConnectivity extends BaseTest {
 
     @RetryCount(2)
-    @Test (groups = {"integration", "bat", "connectivity"}, priority = 1, retryAnalyzer = RetryAnalyzer.class)
+    @Test (groups = {"integration", "bat", "connectivity"}, retryAnalyzer = RetryAnalyzer.class)
     public void testAppServerConnectivity() {
         boolean isConnected = false;
 
@@ -33,8 +32,8 @@ public class TestConnectivity extends BaseTest {
         Assert.assertTrue(isConnected);
     }
 
-    @RetryCount(2)
-    @Test (groups = {"integration", "bat", "connectivity"}, priority = 2)
+    @RetryCount(3)
+    @Test (groups = {"integration", "bat", "connectivity"}, retryAnalyzer = RetryAnalyzer.class)
     public void testDatabaseConnectivity() throws SQLException {
         String query = "SELECT 1 FROM DUAL";
         String response = db.executeQueryReadOne(query).toString();

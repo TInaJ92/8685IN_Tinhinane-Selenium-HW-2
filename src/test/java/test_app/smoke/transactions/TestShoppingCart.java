@@ -5,12 +5,14 @@ import app.pom.Homepage;
 import app.shared.Catalog;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import test_base.BaseTest;
+import base_test.BaseTest;
+
+import java.util.HashMap;
 
 public class TestShoppingCart extends BaseTest {
 
     @RetryCount(1)
-    @Test (groups = {"smoke"})
+    @Test (groups = {"smoke", "transactions"})
     public void testAddItemToCart() {
         Homepage homepage = new Homepage();
         homepage.hoverWomenCategoriesButton();
@@ -19,9 +21,12 @@ public class TestShoppingCart extends BaseTest {
         summerDresses.setPriceSliderUpperPriceRange(20.00);
         summerDresses.clickItemByIndex(0);
 
-        int desiredQuantity = 3;
-        String size = "M";
-        summerDresses.addItemToCart(desiredQuantity, size);
+        HashMap<String, String> dataModel = excel.getDataModel("testAddItemToCartModel");
+
+        // TODO - Fix implementation to return int, when desired
+        double desiredQuantity = Double.parseDouble(dataModel.get("quantity"));
+        String size = dataModel.get("size");
+        summerDresses.addItemToCartFromQuickViewFrame(desiredQuantity, size);
 
         String expectedMessage = excel.readStringArray("testAddItemToCart")[0];
 

@@ -10,14 +10,14 @@
     <parameter name="driverConfigEnabled" value="true"/>
 
     <test name="smoke">
-<!--        <groups>-->
-<!--            <run>-->
-<!--                <include name="smoke"/>-->
-<!--                <include name="registration"/>-->
-<!--            </run>-->
-<!--        </groups>-->
+        <groups>
+            <run>
+                <include name="registration"/>
+            </run>
+        </groups>
         <classes>
             <class name="test_app.smoke.authentication.TestAuthentication"/>
+            <class name="test_app.smoke.transactions.TestShoppingCart"/>
         </classes>
     </test>
 
