@@ -23,7 +23,6 @@ public class TestShoppingCart extends BaseTest {
 
         HashMap<String, String> dataModel = excel.getDataModel("testAddItemToCartModel");
 
-        // TODO - Fix implementation to return int, when desired
         double desiredQuantity = Double.parseDouble(dataModel.get("quantity"));
         String size = dataModel.get("size");
         summerDresses.addItemToCartFromQuickViewFrame(desiredQuantity, size);
