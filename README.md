@@ -12,8 +12,10 @@ You are a QA Engineer at ABC Company. You have been handed this framework and ar
 
 **Step 2**
 - Create your own public repository in GitHub and name it with the following format: 
-    
-        ```<StudentID_FirstName> Selenium HW 1```
+
+    ```txt
+    StudentID_FirstName Selenium HW 1
+    ```
 
 **Step 3**
 - Once you create your GitHub repo, [click here to add your repo URL](https://drive.google.com/open?id=1yK5JH410iUik8CxsN7uvq44Z-Mmn6mHHHwBWfhOnL8A&authuser=0)
