@@ -1,7 +1,5 @@
 package config;
 
-import utils.Database;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

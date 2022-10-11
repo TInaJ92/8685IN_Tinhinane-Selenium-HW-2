@@ -21,7 +21,6 @@ import org.testng.annotations.*;
 import org.testng.annotations.Optional;
 import reporting.ExtentManager;
 import reporting.ExtentTestManager;
-import utils.Database;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -32,7 +31,6 @@ import java.util.NoSuchElementException;
 
 public class BasePage {
 
-    public static Database db;
     public static Map<Object, String> appConfig;
     public static WebDriver driver;
     public static WebDriverWait webDriverWait;
@@ -59,7 +57,6 @@ public class BasePage {
 
     @BeforeMethod(alwaysRun = true)
     public void initConfig() {
-        db = new Database();
         appConfig = Config.appConfig();
     }
 
@@ -78,18 +75,6 @@ public class BasePage {
     public void cleanUp() {
         driver.close();
         driver.quit();
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void dbCleanUp() {
-        try {
-            db.connect.close();
-            System.out.println("SUCCESSFULLY CLOSED DATABASE CONNECTION");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e1) {
-            System.out.println("DID NOT ATTEMPT TO CLOSE EMPTY DATABASE CONNECTION");
-        }
     }
 
     @Parameters()
