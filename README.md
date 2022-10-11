@@ -50,7 +50,7 @@ You are a QA Engineer at ABC Company. You have been handed this framework and ar
           git commit -m "Initial Commit"
           ```
           ```sh
-          `git push -u origin main`
+          git push -u origin main
           ```
 #
 ### IMPORTANT NOTES :
