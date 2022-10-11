@@ -12,12 +12,11 @@
     <test name="smoke">
         <groups>
             <run>
-                <include name="registration"/>
+<!--                <include name=""/>-->
             </run>
         </groups>
         <classes>
-            <class name="test_app.smoke.authentication.TestAuthentication"/>
-            <class name="test_app.smoke.transactions.TestShoppingCart"/>
+<!--            <class name=""/>-->
         </classes>
     </test>
 

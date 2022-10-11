@@ -1,12 +1,9 @@
 package base;
 
-import com.github.javafaker.Bool;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import config.Config;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import listeners.DriverEventListener;
 import org.openqa.selenium.*;
@@ -36,7 +33,7 @@ import java.util.NoSuchElementException;
 public class BasePage {
 
     public static Database db;
-    public static Map<Object, String> appConfig = Config.appConfig();
+    public static Map<Object, String> appConfig;
     public static WebDriver driver;
     public static WebDriverWait webDriverWait;
     public static Wait<WebDriver> fluentWait;
@@ -61,8 +58,9 @@ public class BasePage {
     }
 
     @BeforeMethod(alwaysRun = true)
-    public void dbInit() {
+    public void initConfig() {
         db = new Database();
+        appConfig = Config.appConfig();
     }
 
     @Parameters({"browser", "canRunDriver"})
@@ -76,11 +74,8 @@ public class BasePage {
         }
     }
 
-
-
-    @Parameters({"canRunDriver"})
     @AfterMethod ()
-    public void cleanUp(@Optional("true") String canRunDriver) {
+    public void cleanUp() {
         driver.close();
         driver.quit();
     }
@@ -236,21 +231,6 @@ public class BasePage {
     }
 
     // region JavaScriptExecutor Methods
-    // TODO - Unit test and refactor as needed
-    public String jsGetTrimmedElementText(WebElement element) {
-        jsDriver = (JavascriptExecutor) (driver);
-        String query = "arguments[0].getPropertyValue('innerHTML');";
-
-        return jsDriver.executeScript(query, element).toString();
-    }
-
-    // TODO - Unit test and refactor as needed
-    public WebElement findElementByXPathJS(String xPath) {
-        jsDriver = (JavascriptExecutor) (driver);
-        String query = String.format("document.getElement(By.xpath(\"%s\")", xPath);
-        return (WebElement) (jsDriver.executeScript(query));
-    }
-
     public void jsClickOnElement(WebElement element) {
         jsDriver = (JavascriptExecutor) (driver);
         jsDriver.executeScript("arguments[0].click();", element);
@@ -342,6 +322,7 @@ public class BasePage {
         calendar.setTimeInMillis(millis);
         return calendar.getTime();
     }
+
     // endregion
 
 }

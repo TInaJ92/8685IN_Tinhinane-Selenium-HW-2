@@ -59,12 +59,12 @@ public class DriverEventListener implements WebDriverListener {
 
     @Override
     public void beforeGetTitle(WebDriver driver) {
-
+        System.out.println("Attempting to get page title");
     }
 
     @Override
     public void afterGetTitle(WebDriver driver, String result) {
-
+        System.out.printf("Page title: %s%n", result);
     }
 
     @Override
