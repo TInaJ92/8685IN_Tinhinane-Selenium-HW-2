@@ -33,19 +33,19 @@ the values for the corresponding fields
  
 **Step 6**
 - Open the project and go to the terminal to point your local project/repo to your newly created remote repo
-    - First, we want to verify the remote repo your local project is currently pointing to  
+    - First, we want to verify the remote repo your local project is currently pointing to:  
     ```sh
     git remote -v
     ``` 
-    - Next, change your project's remote repo
+    - Next, change your project's remote repo:
     ```sh
     git remote set-url origin <your repo URL>
     ```
-    - Verify your local repo now points to your remote repo 
+    - Verify your local repo now points to your remote repo:
     ```sh
     git remote -v
     ```
-    - Then commit and push your code to initialize your remote repo
+    - Then commit and push your code to initialize your remote repo:
     ```sh
     git add .
     ```
@@ -55,6 +55,11 @@ the values for the corresponding fields
     ```sh
     git push -u origin main
     ```
+    - For all subsequent pushes:
+    ```sh
+    git push
+    ```
+    
 #
 ### IMPORTANT NOTES :
 - Try to get your test cases to pass with a 90%+ success rate
