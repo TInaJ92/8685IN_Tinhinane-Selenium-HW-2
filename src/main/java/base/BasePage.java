@@ -24,7 +24,6 @@ import reporting.ExtentTestManager;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.sql.SQLException;
 import java.time.Duration;
 import java.util.*;
 import java.util.NoSuchElementException;
@@ -35,7 +34,6 @@ public class BasePage {
     public static WebDriver driver;
     public static WebDriverWait webDriverWait;
     public static Wait<WebDriver> fluentWait;
-    public static WebDriverWait syncWait;
     public static ExtentReports extent;
     public static JavascriptExecutor jsDriver;
 
@@ -64,7 +62,11 @@ public class BasePage {
     @BeforeMethod
     public void driverSetup(@Optional("chrome") String browser, @Optional("true") String canRunDriver) {
         if (Boolean.parseBoolean(canRunDriver)) {
-            driverInit(browser);
+            long explicit_timeout = Long.parseLong(appConfig.get("explicit_timeout_seconds"));
+            long fluent_timeout = Long.parseLong(appConfig.get("fluent_timeout_seconds"));
+            long polling_interval = Long.parseLong(appConfig.get("polling_interval_ms"));
+
+            driverInit(browser, explicit_timeout, fluent_timeout, polling_interval);
             driver.get(appConfig.get(Config.AppProperties.URL));
             driver.manage().deleteAllCookies();
             driver.manage().window().maximize();
@@ -90,17 +92,18 @@ public class BasePage {
         for (String group : testResult.getMethod().getGroups()) {
             test.assignCategory(group);
         }
+
         if (testStatus == ITestResult.FAILURE) {
             if (driver != null) {
                 captureScreenshot(driver, testName);
             }
-            test.log(LogStatus.FAIL, "TEST CASE FAILED: " + testName);
+            test.log(LogStatus.FAIL, "TEST FAILED: " + testName);
             test.log(LogStatus.FAIL, testResult.getThrowable());
 
         } else if (testStatus == ITestResult.SKIP) {
-            test.log(LogStatus.SKIP, "TEST CASE SKIPPED: " + testName);
+            test.log(LogStatus.SKIP, "TEST SKIPPED: " + testName);
         } else if (testStatus == ITestResult.SUCCESS) {
-            test.log(LogStatus.PASS, "TEST CASE PASSED: " + testName);
+            test.log(LogStatus.PASS, "TEST PASSED: " + testName);
         }
 
         ExtentTestManager.endTest();
@@ -184,7 +187,7 @@ public class BasePage {
 
     public boolean isElementVisible(WebElement element) {
         try {
-            syncWait.until(ExpectedConditions.visibilityOf(element));
+            webDriverWait.until(ExpectedConditions.visibilityOf(element));
         } catch (TimeoutException e) {
             return false;
         }
@@ -246,7 +249,7 @@ public class BasePage {
     // endregion
 
     // region Helper Methods
-    private static void driverInit(String browser) {
+    private static void driverInit(String browser, long explicit_timeout, long fluent_timeout, long polling_interval) {
         if (browser.equalsIgnoreCase("chrome")) {
             WebDriverManager.chromedriver().setup();
             driver = new ChromeDriver();
@@ -258,16 +261,14 @@ public class BasePage {
             driver = new SafariDriver();
         }
 
-        webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        syncWait = new WebDriverWait(driver, Duration.ofSeconds(3));
-        fluentWait = new FluentWait<>(driver)
-                .withTimeout(Duration.ofSeconds(30))
-                .pollingEvery(Duration.ofMillis(500))
-                .ignoring(Exception.class);
-
         WebDriverListener listener = new DriverEventListener();
         driver = new EventFiringDecorator(listener).decorate(driver);
 
+        webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(explicit_timeout));
+        fluentWait = new FluentWait<>(driver)
+                .withTimeout(Duration.ofSeconds(fluent_timeout))
+                .pollingEvery(Duration.ofMillis(polling_interval))
+                .ignoring(Exception.class);
     }
 
     private static void captureScreenshot(WebDriver driver, String testName) {
