@@ -220,7 +220,6 @@ public class BasePage {
 
     // region JavaScriptExecutor Methods
     public void jsClickOnElement(WebElement element) {
-        jsDriver = (JavascriptExecutor) (driver);
         jsDriver.executeScript("arguments[0].click();", element);
     }
 
@@ -238,7 +237,6 @@ public class BasePage {
     }
 
     public WebElement setElementAttributeValue(String attribute, String value, By by) {
-        jsDriver = (JavascriptExecutor) (driver);
         jsDriver.executeScript("arguments[0].setAttribute('" + attribute + "', '" + value + "')", driver.findElement(by));
 
         return driver.findElement(by);
@@ -263,6 +261,7 @@ public class BasePage {
 
         WebDriverListener listener = new DriverEventListener();
         driver = new EventFiringDecorator(listener).decorate(driver);
+        jsDriver = (JavascriptExecutor) (driver);
 
         webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(explicit_timeout));
         fluentWait = new FluentWait<>(driver)
