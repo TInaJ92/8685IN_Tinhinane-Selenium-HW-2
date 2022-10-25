@@ -32,7 +32,6 @@ import java.util.NoSuchElementException;
 public class BasePage {
 
     public static Config config = new Config();
-    public static Properties prop;
     public static WebDriver driver;
     public static WebDriverWait webDriverWait;
     public static Wait<WebDriver> fluentWait;
