@@ -23,6 +23,7 @@ import reporting.ExtentManager;
 import reporting.ExtentTestManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.*;
@@ -30,7 +31,8 @@ import java.util.NoSuchElementException;
 
 public class BasePage {
 
-    public static Map<Object, String> appConfig;
+    public static Config config = new Config();
+    public static Properties prop;
     public static WebDriver driver;
     public static WebDriverWait webDriverWait;
     public static Wait<WebDriver> fluentWait;
@@ -53,21 +55,12 @@ public class BasePage {
         ExtentTestManager.getTest().assignCategory(className);
     }
 
-    @BeforeMethod(alwaysRun = true)
-    public void initConfig() {
-        appConfig = Config.appConfig();
-    }
-
     @Parameters({"browser", "canRunDriver"})
     @BeforeMethod
     public void driverSetup(@Optional("chrome") String browser, @Optional("true") String canRunDriver) {
         if (Boolean.parseBoolean(canRunDriver)) {
-            long explicit_timeout = Long.parseLong(appConfig.get("explicit_timeout_seconds"));
-            long fluent_timeout = Long.parseLong(appConfig.get("fluent_timeout_seconds"));
-            long polling_interval = Long.parseLong(appConfig.get("polling_interval_ms"));
-
-            driverInit(browser, explicit_timeout, fluent_timeout, polling_interval);
-            driver.get(appConfig.get(Config.AppProperties.URL));
+            driverInit(browser, config.explicitTimeoutSeconds, config.fluentTimeoutSeconds, config.pollingIntervalMs);
+            driver.get(config.appURL);
             driver.manage().deleteAllCookies();
             driver.manage().window().maximize();
         }

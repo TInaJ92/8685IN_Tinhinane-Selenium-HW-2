@@ -13,61 +13,41 @@ public class Config {
     private static final File propertiesFile = new File(System.getProperty("user.dir") + File.separator + "src"
             + File.separator + "main" + File.separator + "resources" + File.separator + "config" + File.separator
             + "config.properties");
+    public String appURL;
+    public String appHost;
+    public String appUser;
+    public String appPassword;
+    public long explicitTimeoutSeconds;
+    public long fluentTimeoutSeconds;
+    public long pollingIntervalMs;
 
-    public static Map<Object, String> appConfig() {
+    public Config() {
         try {
             properties = loadProperties();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        Map<Object, String> appConfig = new HashMap<>();
+        this.appURL = properties.getProperty("app_url");
+        this.appHost = properties.getProperty("app_host");
+        this.appUser = properties.getProperty("app_user");
+        this.appPassword = properties.getProperty("app_password");
+        this.explicitTimeoutSeconds = Long.parseLong(properties.getProperty("explicit_timeout_seconds"));
+        this.fluentTimeoutSeconds = Long.parseLong(properties.getProperty("fluent_timeout_seconds"));
+        this.pollingIntervalMs = Long.parseLong(properties.getProperty("polling_interval_ms"));
 
-        if (properties != null) {
-            appConfig.put(AppProperties.URL, properties.getProperty("app_url"));
-            appConfig.put(AppProperties.HOST, properties.getProperty("app_host"));
-            appConfig.put(AppProperties.USER, properties.getProperty("app_user"));
-            appConfig.put(AppProperties.PASSWORD, properties.getProperty("app_password"));
-        }
-
-        return appConfig;
     }
 
-    public static Map<Object, String> databaseConfig() {
-        try {
-            properties = loadProperties();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
-
-        Map<Object, String> dbConfig = new HashMap<>();
-
-        if (properties != null) {
-            dbConfig.put(DBProperties.DRIVER_CLASS, properties.getProperty("MYSQLJDBC.driver"));
-            dbConfig.put(DBProperties.HOST, properties.getProperty("MYSQLJDBC.host"));
-            dbConfig.put(DBProperties.USER, properties.getProperty("MYSQLJDBC.username"));
-            dbConfig.put(DBProperties.PASSWORD, properties.getProperty("MYSQLJDBC.password"));
-        }
-
-        return dbConfig;
-    }
-
-    private static Properties loadProperties() throws IOException {
+    private Properties loadProperties() throws IOException {
         Properties prop = new Properties();
-        FileInputStream fis = new FileInputStream(propertiesFile);
 
-        prop.load(fis);
-        fis.close();
+        try (FileInputStream fis = new FileInputStream(propertiesFile)) {
+            prop.load(fis);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return prop;
-    }
-
-    public enum AppProperties {
-        URL, HOST, USER, PASSWORD
-    }
-
-    public enum DBProperties {
-        DRIVER_CLASS, HOST, USER, PASSWORD
     }
 
 }

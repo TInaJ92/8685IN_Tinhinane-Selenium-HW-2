@@ -10,11 +10,11 @@
     <parameter name="driverConfigEnabled" value="true"/>
 
     <test name="smoke">
-        <groups>
-            <run>
+<!--        <groups>-->
+<!--            <run>-->
 <!--                <include name=""/>-->
-            </run>
-        </groups>
+<!--            </run>-->
+<!--        </groups>-->
         <classes>
 <!--            <class name=""/>-->
         </classes>
