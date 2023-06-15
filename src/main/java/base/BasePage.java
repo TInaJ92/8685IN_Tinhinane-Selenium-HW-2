@@ -4,15 +4,17 @@ import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import config.Config;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import listeners.DriverEventListener;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.events.EventFiringDecorator;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.events.WebDriverListener;
 import org.openqa.selenium.support.ui.*;
 import org.testng.ITestContext;
@@ -23,7 +25,6 @@ import reporting.ExtentManager;
 import reporting.ExtentTestManager;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.*;
@@ -223,8 +224,6 @@ public class BasePage {
             jsClickOnElement(element);
         } catch (TimeoutException | NoSuchElementException e) {
             System.out.println("Unable to locate element - check element locator and ensure element is being made available");
-        } catch (ElementNotVisibleException e) {
-            jsClickOnElement(element);
         }
     }
 
@@ -241,25 +240,23 @@ public class BasePage {
     // region Helper Methods
     private static void driverInit(String browser, long explicit_timeout, long fluent_timeout, long polling_interval) {
         if (browser.equalsIgnoreCase("chrome")) {
-            WebDriverManager.chromedriver().setup();
             driver = new ChromeDriver();
         } else if (browser.equalsIgnoreCase("firefox")) {
-            WebDriverManager.firefoxdriver().setup();
-            driver = new FirefoxDriver();
+            FirefoxOptions options = new FirefoxOptions();
+            options.setBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe");
+            driver = new FirefoxDriver(options);
         } else if (browser.equalsIgnoreCase("safari")) {
-            WebDriverManager.safaridriver().setup();
             driver = new SafariDriver();
         }
 
         WebDriverListener listener = new DriverEventListener();
         driver = new EventFiringDecorator(listener).decorate(driver);
         jsDriver = (JavascriptExecutor) (driver);
-
         webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(explicit_timeout));
         fluentWait = new FluentWait<>(driver)
                 .withTimeout(Duration.ofSeconds(fluent_timeout))
                 .pollingEvery(Duration.ofMillis(polling_interval))
-                .ignoring(Exception.class);
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
     }
 
     private static void captureScreenshot(WebDriver driver, String testName) {

@@ -9,10 +9,10 @@ import java.util.Properties;
 
 public class Config {
 
-    public static Properties properties;
     private static final File propertiesFile = new File(System.getProperty("user.dir") + File.separator + "src"
             + File.separator + "main" + File.separator + "resources" + File.separator + "config" + File.separator
             + "config.properties");
+    private static Properties properties;
     public String appURL;
     public String appHost;
     public String appUser;
