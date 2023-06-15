@@ -16,7 +16,7 @@
 <!--            </run>-->
 <!--        </groups>-->
         <classes>
-<!--            <class name=""/>-->
+            <class name="test_app.TestApp"/>
         </classes>
     </test>
 
