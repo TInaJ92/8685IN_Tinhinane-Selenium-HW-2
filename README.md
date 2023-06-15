@@ -2,8 +2,8 @@
 
 
 ### PURPOSE:
-You are a QA Engineer at ABC Company. You have been handed this framework and are responsible for delivering 5 automated
- smoke tests before the next production release for the [Application Under Test (AUT)](http://automationpractice.com/)
+You are a QA Engineer at Luma. You have been handed this framework and are responsible for delivering 5 automated
+ smoke tests before the next production release for the [Application Under Test (AUT)](https://magento.softwaretestingboard.com/)
 #
 ##### INSTRUCTIONS:
 **Step 1** 
@@ -18,10 +18,10 @@ You are a QA Engineer at ABC Company. You have been handed this framework and ar
     ```
 
 **Step 3**
-- Once you create your GitHub repo, [click here to add your repo URL](https://drive.google.com/open?id=1yK5JH410iUik8CxsN7uvq44Z-Mmn6mHHHwBWfhOnL8A&authuser=0)
+- Once you create your GitHub repo, [click here to add your repo URL](https://docs.google.com/spreadsheets/d/16Go1zZxJlFxctZJylY4u78fj8nwLOrHj9suf4qIE7h8/edit?usp=sharing)
 
 **Step 4**
-- Clone this project locally in your IdeaProjects folder
+- Clone this project locally
 
 **Step 5**
 - Go to ```src/main/resources/config/config.properties``` and provide your email address and password from step 1 as 
@@ -66,11 +66,10 @@ the values for the corresponding fields
 - Make sure to implement Page Object Model using Page Factory
 - Use explicit & fluent waits
 - Think of some critical functionalities to test, such as: 
-    - Authentication
-    - Adding items to cart
-    - Searching for items
-    - Changing item quantity/color
-    - Allowing users to add shipping addresses in their account
+    - Registration & authentication
+    - Item search
+    - Adding/modifying/removing items to/from cart
+    - Checkout
 
 
 #### ***Have fun with it!***
