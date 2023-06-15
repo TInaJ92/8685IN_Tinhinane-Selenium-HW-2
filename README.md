@@ -18,7 +18,7 @@ You are a QA Engineer at Luma. You have been handed this framework and are respo
     ```
 
 **Step 3**
-- Once you create your GitHub repo, [click here to add your repo URL](https://docs.google.com/spreadsheets/d/16Go1zZxJlFxctZJylY4u78fj8nwLOrHj9suf4qIE7h8/edit?usp=sharing)
+- Once you create your GitHub repo, [click here to add your repo URL](https://docs.google.com/spreadsheets/d/1EGcovF6EOyaS9e-t5ol22JqaYSDfnxmZ3AaC24TaSHk/edit#gid=0)
 
 **Step 4**
 - Clone this project locally
