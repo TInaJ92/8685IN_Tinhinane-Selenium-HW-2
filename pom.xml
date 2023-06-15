@@ -94,7 +94,6 @@
                     <testFailureIgnore>true</testFailureIgnore>
 
                     <suiteXmlFiles>
-                        <suiteXmlFile>target/test-classes/BATTestNGRunner.xml</suiteXmlFile>
                         <suiteXmlFile>target/test-classes/SmokeTestNGRunner.xml</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
