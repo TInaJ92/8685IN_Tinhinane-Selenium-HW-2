@@ -10,7 +10,7 @@ You are a QA Engineer at Luma. You have been handed this framework and are respo
 - Create your own public repository in GitHub and name it with the following format: 
 
     ```txt
-    StudentID_FirstName Selenium HW 1
+    StudentID_FirstName Selenium HW 2
     ```
 
 **Step 2**
