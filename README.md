@@ -7,24 +7,20 @@ You are a QA Engineer at Luma. You have been handed this framework and are respo
 #
 ##### INSTRUCTIONS:
 **Step 1** 
-- Register an account on the AUT using your email address and a simple password (e.g. - Test123)
-- This will be your test account that you can use in this framework to access the application using Selenium
-
-**Step 2**
 - Create your own public repository in GitHub and name it with the following format: 
 
     ```txt
     StudentID_FirstName Selenium HW 1
     ```
 
-**Step 3**
+**Step 2**
 - Once you create your GitHub repo, [click here to add your repo URL](https://docs.google.com/spreadsheets/d/1EGcovF6EOyaS9e-t5ol22JqaYSDfnxmZ3AaC24TaSHk/edit#gid=0)
 
-**Step 4**
+**Step 3**
 - Clone this project locally
 
-**Step 5**
-- Go to ```src/main/resources/config/config.properties``` and provide your email address and password from step 1 as 
+**Step 4**
+- Go to ```src/main/resources/config/config.properties``` and provide the username and password from step 1 as 
 the values for the corresponding fields
 
     ```properties
