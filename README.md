@@ -27,7 +27,7 @@ the values for the corresponding fields
     app_user={your_email_address}
     app_password={your_password}
  
-**Step 6**
+**Step 5**
 - Open the project and go to the terminal to point your local project/repo to your newly created remote repo
     - First, we want to verify the remote repo your local project is currently pointing to:  
     ```sh
