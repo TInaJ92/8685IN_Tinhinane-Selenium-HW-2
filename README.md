@@ -2,7 +2,7 @@
 
 
 ### PURPOSE:
-You are a QA Engineer at Luma. You have been handed this framework and are responsible for delivering 5 automated
+You are a QA Engineer at Luma. You have been handed this framework and are responsible for delivering 10 automated
  smoke tests before the next production release for the [Application Under Test (AUT)](https://magento.softwaretestingboard.com/)
 #
 ##### INSTRUCTIONS:
