@@ -14,13 +14,13 @@ public class TestApp extends BasePage {
 
     RegistrationPage registrationPage = new RegistrationPage();
 
-    @Test(priority = 0, groups = {"BAT"}, enabled = true)
+    @Test(priority = 0, groups = {"BAT"}, enabled = false)
     public void testNavigationToApplication() {
         Homepage homepage = new Homepage();
         Assert.assertTrue(isElementVisible(homepage.logo));
 
     }
-    @Test(priority = 1, groups = {"BAT"}, enabled = false)
+    @Test(priority = 1, groups = {"BAT"}, enabled = true)
     public void testLogin(){
 
         LoginPage logInPage= new LoginPage();
