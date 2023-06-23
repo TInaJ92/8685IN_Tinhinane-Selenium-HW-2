@@ -20,7 +20,7 @@ public class TestApp extends BasePage {
         Assert.assertTrue(isElementVisible(homepage.logo));
 
     }
-    @Test(priority = 1, groups = {"BAT"}, enabled = true)
+    @Test(priority = 1, groups = {"BAT"}, enabled = false)
     public void testLogin(){
 
         LoginPage logInPage= new LoginPage();
@@ -30,10 +30,11 @@ public class TestApp extends BasePage {
 
     }
 
-    @Test(priority = 2, groups = {"BAT"}, enabled = false)
+    @Test(priority = 2, groups = {"BAT"}, enabled = true)
     public void accountRegistration() throws InterruptedException{
         testNavigationToApplication();
-        registrationPage.getRegistrationPage("test@gmail.com", "Test456#");
+        //Always change email and password before Run
+        registrationPage.getRegistrationPage("test67@gmail.com", "Test768456#");
 
     }
     @Test(enabled = false)

@@ -8,7 +8,7 @@ import org.openqa.selenium.By;
 import static base.BasePage.driver;
 
 public class RegistrationPage extends BasePage {
-        @FindBy(xpath = "//div[@class='panel header']//a[contains(.,'Sign In')]")
+     /*   @FindBy(xpath = "//div[@class='panel header']//a[contains(.,'Sign In')]")
         public WebElement loginLink;
         @FindBy(xpath = "//a[text() = 'Create an Account']")
         public WebElement createAnAccountLink;
@@ -43,7 +43,7 @@ public class RegistrationPage extends BasePage {
         }
         public void clickCreateAnAccountButton(WebElement element) {
             clickOnElement(element);
-        }
+        } */
         public void getRegistrationPage(String validEmail, String validPassword) throws InterruptedException{
             Thread.sleep(5000);
             //clickOnElement(createAnAccountLink);
