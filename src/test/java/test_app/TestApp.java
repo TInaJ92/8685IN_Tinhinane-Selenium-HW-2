@@ -30,39 +30,15 @@ public class TestApp extends BasePage {
 
     }
 
-    @Test(priority = 2, groups = {"BAT"}, enabled = true)
+    @Test(priority = 2, groups = {"BAT"}, enabled = false)
     public void accountRegistration() throws InterruptedException{
         testNavigationToApplication();
         //Always change email and password before Run
         registrationPage.getRegistrationPage("test67@gmail.com", "Test768456#");
 
     }
-    @Test(enabled = false)
+    @Test (priority = 3, groups = {"BAT"}, enabled = true)
     public void userIsAbleToSearchForAnItem() throws InterruptedException {
-
-    /*    driver.get("https://magento.softwaretestingboard.com/");
-        Thread.sleep(7000);
-
-        driver.findElement(By.xpath("//input[@id='search']")).sendKeys("Yoga");
-        System.out.println("Entered item name");
-        Thread.sleep(1000);
-
-        driver.findElement(By.xpath("//button[@title='Search']")).click();
-        System.out.println("clicked on search button");
-        Thread.sleep(4000);
- WebElement searchItem = driver.findElement(By.xpath("//a[contains(text(), 'Josie Yoga Jacket' )]"));
-
-        boolean isSearchItemDisplayed = driver.findElement(By.xpath("//a[contains(text(), 'Josie Yoga Jacket' )]")).isDisplayed();
-
-        if (isSearchItemDisplayed){
-            System.out.println("Search item is displayed successfully");
-            Assert.assertTrue(true, "Search item is displayed successfully");
-        } else {
-            System.out.println("Search item is Not displayed");
-            Assert.assertTrue(false, "Search item is Not displayed");
-        }
-
-*/
 
        testNavigationToApplication();
         Homepage homepage = new Homepage();
