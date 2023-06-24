@@ -24,16 +24,31 @@ public class Homepage extends BasePage {
     @FindBy (xpath = "//a[contains(text(), 'Josie Yoga Jacket' )]")
     public WebElement searchItem;
 
+    @FindBy (xpath ="//button[@title='Add to Cart']")
+    public WebElement addToCartBtn;
 
-   /* @FindBy (xpath ="//span[@class=\"product-image-container\"]")
-    public WebElement getSearchItem;
-    @FindBy (xpath = "//dd[@class=\"item\"]")
-    public WebElement getGetSearchItem;*/
+    @FindBy (xpath ="//div[@attribute-code='size']/div/div[2]")
+    public WebElement sizeBtn;
 
-   /* @FindBy (xpath = "//div[@data-bind="i18n: 'Shipping Methods'"]")
-    public WebElement shippingMethod;
-    @FindBy (xpath = "\"//span[@data-bind="i18n: 'Next'"]"")
-    public WebElement clickBtn*/
+    @FindBy (xpath ="(//div[@class='swatch-option color'])[1]")
+    public WebElement colorBtn;
+
+    @FindBy (xpath ="//a[@class='action showcart']")
+    public WebElement addToCartIcon;
+
+
+    @FindBy (xpath ="//button[@title='Subscribe']")
+    public WebElement subscriptionBtn;
+
+    @FindBy (xpath ="//div[contains(text(), 'This email address is already subscribed.')]")
+    public WebElement errorMessage;
+
+    @FindBy (xpath ="//input[@name=\"email\"]")
+    public WebElement emailToSubscribe;
+
+
+
+
 
 }
 

@@ -15,13 +15,13 @@ public class TestApp extends BasePage {
 
     RegistrationPage registrationPage = new RegistrationPage();
 
-    @Test(priority = 0, groups = {"BAT"}, enabled = false)
+    @Test(priority = 0, groups = {"BAT"})
     public void testNavigationToApplication() {
         Homepage homepage = new Homepage();
         Assert.assertTrue(isElementVisible(homepage.logo));
 
     }
-    @Test(priority = 1, groups = {"BAT"}, enabled = false)
+    @Test(priority = 1, groups = {"BAT"})
     public void testLogin(){
 
         LoginPage logInPage= new LoginPage();
@@ -31,14 +31,14 @@ public class TestApp extends BasePage {
 
     }
 
-    @Test(priority = 2, groups = {"BAT"}, enabled = false)
+    @Test(priority = 2, groups = {"BAT"})
     public void accountRegistration() throws InterruptedException{
         testNavigationToApplication();
-
+//always we have to change Email and Password
         registrationPage.getRegistrationPage("test67@gmail.com", "Test768456#");
 
     }
-    @Test (priority = 3, groups = {"BAT"}, enabled = false)
+    @Test (priority = 3, groups = {"BAT"})
     public void userIsAbleToSearchForAnItem() throws InterruptedException {
 
        testNavigationToApplication();
@@ -59,12 +59,25 @@ public class TestApp extends BasePage {
         String commit= "Hello Word";
         page.doContactUs(name,email,phoneNumber,commit);
         Assert.assertTrue(isElementVisible(page.Message));
+
     }
+    @Test(priority = 5, groups = {"BAT"})
+    public void userIsAbleToSubscribe() throws InterruptedException {
+        {
+            Homepage homepage = new Homepage();
+            Thread.sleep(4000);
+            sendKeysToElement(homepage.emailToSubscribe, "tiiittt@gmail.com");
+            clickOnElement(homepage.subscriptionBtn);
+            System.out.println("clicked on subscribe button");
+            Thread.sleep(2000);
+            Assert.assertTrue(isElementVisible(homepage.errorMessage));
+}
 
 
 
 
-     /*@Test(enabled = false)
+
+    /* @Test(enabled = false)
     public void userIsAbleToAddAnItemToTheCart() throws InterruptedException {
         testNavigationToApplication();
         Homepage homepage = new Homepage();
@@ -110,9 +123,104 @@ public class TestApp extends BasePage {
         Assert.assertTrue(isElementVisible(homepage.errorMessage));
     }*/
 }
+  /* @Test(priority = 4,groups = {"BAT"})
 
 
 
+    public void addItemToShoppingCart () throws InterruptedException {
+
+            driver.get("https://magento.softwaretestingboard.com/");
+            Thread.sleep(4000);
+
+            driver.findElement(By.xpath("//input[@id='search']")).sendKeys("Yoga");
+            System.out.println("Entered item name");
+            Thread.sleep(1000);
+
+            driver.findElement(By.xpath("//button[@title='Search']")).click();
+            System.out.println("clicked on search button");
+            Thread.sleep(2000);
+
+            WebElement searchItem = driver.findElement(By.xpath("//a[contains(text(), 'Josie Yoga Jacket' )]"));
+
+            WebElement addToCartButton = driver.findElement(By.xpath("//button[@title='Add to Cart']"));
+            addToCartButton.click();
+            WebElement cartItemCount = driver.findElement(By.xpath("//span[@class='counter-number']"));
+            System.out.println("Cart item count: " + cartItemCount.getText());
+
+            boolean isSearchItemDisplayed = driver.findElement(By.xpath("//a[contains(text(), 'Josie Yoga Jacket' )]")).isDisplayed();
+
+            if (isSearchItemDisplayed) {
+                System.out.println("Added item is displayed successfully");
+                Assert.assertTrue(true, "Added item is displayed successfully");
+            } else {
+                System.out.println("Added item is Not displayed");
+                Assert.assertTrue(false, "Added item is Not displayed");
+            }
+        }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*public void addAnItemToTheShoppingCart() throws InterruptedException {
+
+            driver.get("https://magento.softwaretestingboard.com/");
+            Thread.sleep(4000);
+
+            driver.findElement(By.xpath("//input[@id='search']")).sendKeys("Yoga");
+            System.out.println("Entered item name");
+            Thread.sleep(1000);
+
+            driver.findElement(By.xpath("//button[@title='Search']")).click();
+            System.out.println("clicked on search button");
+            Thread.sleep(2000);
+
+            WebElement searchItem = driver.findElement(By.xpath("//a[contains(text(), 'Josie Yoga Jacket' )]"));
+
+            WebElement addToCartButton = driver.findElement(By.xpath("//button[@title='Add to Cart']"));
+            addToCartButton.click();
+            WebElement cartItemCount = driver.findElement(By.xpath("//span[@class='counter-number']"));
+            System.out.println("Cart item count: " + cartItemCount.getText());
+
+            boolean isSearchItemDisplayed = driver.findElement(By.xpath("//a[contains(text(), 'Josie Yoga Jacket' )]")).isDisplayed();
+
+            if (isSearchItemDisplayed) {
+                System.out.println("Added item is displayed successfully");
+                Assert.assertTrue(true, "Added item is displayed successfully");
+            } else {
+                System.out.println("Added item is Not displayed");
+                Assert.assertTrue(false, "Added item is Not displayed");
+            }
+            }
+}*/
+}
 
 
 
