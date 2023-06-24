@@ -2,6 +2,7 @@ package test_app;
 
 import app.pom.homepage.Homepage;
 import base.BasePage;
+import contactPage.ContactPage;
 import loginpage.LoginPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -33,11 +34,11 @@ public class TestApp extends BasePage {
     @Test(priority = 2, groups = {"BAT"}, enabled = false)
     public void accountRegistration() throws InterruptedException{
         testNavigationToApplication();
-        //Always change email and password before Run
+
         registrationPage.getRegistrationPage("test67@gmail.com", "Test768456#");
 
     }
-    @Test (priority = 3, groups = {"BAT"}, enabled = true)
+    @Test (priority = 3, groups = {"BAT"}, enabled = false)
     public void userIsAbleToSearchForAnItem() throws InterruptedException {
 
        testNavigationToApplication();
@@ -48,6 +49,37 @@ public class TestApp extends BasePage {
 
 }
 
+
+    @Test(priority = 4,groups = {"BAT"})
+    public void ContactPage(){
+        ContactPage page=new ContactPage();
+        String name="juba";
+        String email="jubatt@gmail.com";
+        String phoneNumber="2145698787";
+        String commit= "Hello Word";
+        page.doContactUs(name,email,phoneNumber,commit);
+        Assert.assertTrue(isElementVisible(page.Message));
+    }
+
+
+
+
+     /*@Test(enabled = false)
+    public void userIsAbleToAddAnItemToTheCart() throws InterruptedException {
+        testNavigationToApplication();
+        Homepage homepage = new Homepage();
+        sendKeysToElement(homepage.searchBar, "Dash Digital Watch");
+        clickOnElement(homepage.searchBtn);
+        Thread.sleep(6000);
+        clickOnElement(homepage.itemIcon);
+        Thread.sleep(4000);
+        // clickOnElement(homepage.sizeBtn);
+        // clickOnElement(homepage.colorBtn);
+        clickOnElement(homepage.addToCartBtn);
+        Thread.sleep(4000);
+        clickOnElement(homepage.addToCartIcon);
+        Thread.sleep(2000);
+    }*/
 
 
 
