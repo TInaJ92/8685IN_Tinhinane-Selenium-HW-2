@@ -1,4 +1,4 @@
-package contactPage;
+package app.pom.contactPage;
 import base.BasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

@@ -1,4 +1,4 @@
-package testSubscribe;
+package app.pom.testSubscribe;
 import app.pom.homepage.Homepage;
 import base.BasePage;
 import org.openqa.selenium.WebElement;

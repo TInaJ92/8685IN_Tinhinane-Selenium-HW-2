@@ -45,6 +45,11 @@ public class Homepage extends BasePage {
 
     @FindBy (xpath ="//input[@name=\"email\"]")
     public WebElement emailToSubscribe;
+    @FindBy (xpath ="//span\"([@class=\"product-image-container\"])[1]")
+    public WebElement itemIcon;;
+
+    @FindBy (xpath ="//a[@class='action showcart']")
+    public WebElement addToCartlink;
 
 
 

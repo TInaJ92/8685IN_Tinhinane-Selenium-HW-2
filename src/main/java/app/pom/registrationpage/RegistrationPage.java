@@ -1,4 +1,4 @@
-package registrationpage;
+package app.pom.registrationpage;
 
 import base.BasePage;
 import org.openqa.selenium.WebElement;
